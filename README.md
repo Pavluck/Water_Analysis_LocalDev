@@ -1,8 +1,10 @@
 # Water Analysis: Local Development
+This is different than the deployed version. To see my deployed Water Analysis, visit here: https://water-analysis.onrender.com/
 
 The Water Analysis software determines whether a body of water is potable for humans.
 Uses Chemical and/or Physical Features from the frontend (a website) to send the data to the backend,
 The backend analyzes the input, and returns a decision to the frontend for a user.
+
 
 # Project Setup and Run Instructions  
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)  
