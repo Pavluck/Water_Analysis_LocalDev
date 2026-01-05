@@ -1,6 +1,8 @@
 # Water Analysis: Local Development
-This is different than the deployed version. To see my deployed Water Analysis, visit here: https://water-analysis.onrender.com/
-Note: React takes a *very* long time to spin up on Render, taking about 8 minutes, and is much slower than other deployments, such as with Google Cloud.
+This is different than the deployed version. To see my deployed Water Analysis, visit here: https://water-analysis.onrender.com/  
+Note: React takes a *very* long time to spin up on Render, taking about 8 minutes for both backend and frontend to be responsive.  
+
+<img width="784" height="1134" alt="Screenshot 2026-01-04 195932" src="https://github.com/user-attachments/assets/8a758e42-6fa7-4132-a800-c87d9ad1b6b8" />
 
 The Water Analysis software determines whether a body of water is potable for humans.
 Uses Chemical and/or Physical Features from the frontend (a website) to send the data to the backend.
@@ -23,3 +25,12 @@ Instruction on how to [install Python](https://wiki.python.org/moin/BeginnersGui
 7. Wait until configuration is complete
 8. Upon completion, you can use the Python virtual enviroment by selecting at the top menu bar: "..." --> "Terminal" --> "New Terminal"
 9. Install the necessary Python packages and dependencies described in the Dependencies section below
+
+## Project Structure
+frontend/  
+└── Water Analysis Application # React Web App  
+│ ├── App.js # React main page for routing  
+| └── components/ # React components / react-router-dom  
+| └── public # HTML
+backend/  
+└── Functions to train and feed user input to the AI (under development)  
