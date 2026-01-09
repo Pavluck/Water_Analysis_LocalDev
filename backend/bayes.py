@@ -13,3 +13,14 @@ def entropy(features):
     prob = histogram / len(features)  # histogram 
     uncertainty = -np.sum([p * np.log2(p) for p in prob if p > 0])
     return uncertainty
+#~~~~ Node Class
+class Node:
+    """Helper class to assist in loading the data into a tree"""
+    def __init__(self, feature=None, threshold=None, left=None, right=None,*,value=None):
+        """Initialize the parameters, the * passes non-key args"""
+        self.feature = feature
+        self.threshold = threshold
+        self.left = left
+        self.right = right
+        self.value = value
+        
