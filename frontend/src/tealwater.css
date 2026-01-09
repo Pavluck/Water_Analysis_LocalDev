@@ -1,0 +1,275 @@
+/* Natasha CSS Theme: Teal Water */
+
+/*   ----- Necessary Imports  -----  */
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Tint&family=New+Amsterdam&display=swap');
+/*  ----- Button Referenced from: https://getcssscan.com/css-buttons-examples ----- */
+
+/*   ----- Variables  -----  */
+:root {
+ 
+    --purpleBlue: #020887;
+    --TealBlue: #208bdc;
+    --softBlue: #D6EDFF;
+    --deepBlue: #334195;
+    --cloudyWater: #647AA3;
+    --marineBlack: #05060B;
+    --greenBlue: #3fc2d3;
+    --lightBlueTransparent: #91ddf2e6;
+    --purpleGreyTransparent: #372d53e6;
+  }
+
+  /*   ----- Main Scheme  -----  */
+  body {  
+    background-image: radial-gradient(
+        rgba(10, 60, 135, 0.85), black 120%
+        );
+    height: 100vh;
+    text-align: left;
+    font: 1.3rem Helvetica, monospace;
+    color: var(--softBlue);
+    text-shadow: 0 0 2px #0dd3c3;
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+          }
+    } 
+    .Color {
+        text-align: left;
+    }
+/* This removes the blurry text effect on selection and within forms */
+    ::selection {
+        background: #647AA3;
+        text-shadow: none;
+      }
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+/*  ----- Page layout blocks -----  */
+header, h1 {
+    color: var(--cloudyWater);
+    font: Garamond, monospace;
+    text-shadow: none;
+    padding: 10px ;
+    font-size: 40px;
+    background: var(--marineBlack);
+    font-family: "New Amsterdam", sans-serif;
+    font-weight: 400;
+    text-align: center;
+        ::selection {
+        background: var(--softBlue);
+        text-shadow: none;
+      }
+};
+
+footer {
+    color: var(--cloudyWater);
+    font: Garamond, monospace;
+    text-shadow: none;
+    padding: 5px ;
+    font-size: 17px;
+    background: var(--marineBlack);
+    text-align: center;
+            ::selection {
+        background: var(--softBlue);
+        text-shadow: none;
+      }
+  };
+section {
+    padding: 10px; }
+article {
+    padding: 7px;
+    border-top: 2px dotted var(--TealBlue);
+    border-right: 2px dashed var(--TealBlue);
+    border-bottom: 2px solid var(--TealBlue);
+    border-left: 2px groove var(--TealBlue);
+  }
+ul{
+    list-style-type: none;
+    margin: 5px;
+    padding: 10px;
+    background-color: var(--marineBlack);
+    color: var(--TealBlue) ;
+    text-shadow: none;
+    width: auto;
+
+    /* Add a style for links */
+  }
+a {
+    color: var(--greenBlue) ;
+}
+p {
+  font-size: '20px';
+}  
+
+label {
+  font-size: '25px';
+}
+
+input {
+  font-size: '25px';
+}
+
+h2, h3 {
+        list-style-type: none;
+        padding: 1%;
+        text-shadow: none;
+        color: var(--softBlue) ;
+}
+  /*  ----- Table ----- */
+  table, th, td {
+      border: 1px solid var(--TealBlue) ;
+      border-collapse: collapse;
+      padding: 5px ;
+      margin: 7px;
+      background-color: #141416;;
+      color: var(--TealBlue);
+    } ;
+.Form {
+  border: 1px solid var(--TealBlue) ;
+  font-size: 70px;
+}
+.label {
+  font-size: 70px;
+}
+.App-header {
+        background-color: #141416;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: calc(10px + 2vmin);
+        font-family: "New Amsterdam", sans-serif;
+        color: var(--TealBlue);
+      };
+.Color {
+      padding: 5px;
+    }
+    .App {
+      align-items: center;
+      display:block;
+      padding: 15px;
+      position: center;
+    }
+/*  ----- Form ----- */
+.container {
+  background-color: var(--deepBlue);
+  padding: 2rem;
+  font-size: 45px;
+
+}
+button {
+    padding: .3em;
+    margin: 10px;
+    background-color: var(--greenBlue);
+    color: var(--deepBlue);
+    width: 100px;
+    border-radius: 20%;
+    font-weight:bold;
+    font-size: 25px;
+  }
+  button:hover {
+    background-color: var(--TealBlue);
+    color:var(--marineBlack);
+  }
+
+/*  ----- Referenced from: https://getcssscan.com/css-buttons-examples ----- */
+.waterbutton {
+  align-items: center;
+  appearance: none;
+  background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+  border: 0;
+  border-radius: 6px;
+  box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "JetBrains Mono",monospace;
+  height: 48px;
+  justify-content: center;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transition: box-shadow .15s,transform .15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width:fit-content;
+  white-space: nowrap;
+  will-change: box-shadow,transform;
+  font-size: 18px;
+}
+
+.button-29:focus {
+  box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+}
+
+.button-29:hover {
+  box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+.button-29:active {
+  box-shadow: #3c4fe0 0 3px 7px inset;
+  transform: translateY(2px);
+}
+
+.actions {
+    background-color: #141416;
+    color: var(--TealBlue);
+};
+/* General Table formatting */
+.Form {
+    background-color: var(--TealBlue);
+    color: green;
+    text-shadow: none;
+};
+/* Hyperlinks */
+a:-webkit-any-link {
+    color: var(--TealBlue);
+    text-decoration: underline;
+    text-shadow: none;
+    padding: 10px;
+};
+.App {
+    ul {
+        list-style-type: none;
+        margin: 50px;
+        padding: 10px;
+        color: var(--TealBlue) ;
+      }
+};
+label, input {
+  display: flex;
+  width: 170px;
+  font-size: 7em;
+};
+
+.container {
+  display: flex;
+  flex-direction: row ;
+  color: var(--lightBlueTransparent);
+};
+.item {
+  order: 5; /* default is 0 */
+};
+nav a {
+    border-radius: 5px 5px 0 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 0;
+    padding: 3px 20px 5px 20px;
+    text-decoration: none;
+};
