@@ -30,3 +30,10 @@ class Node:
         # allows tree to grow
         self.root = self._grow_tree(Samples, features)
         return
+
+    def __grow_tree(self, Samples, features, depth=0):
+        """Grows the tree based on number of samples and features"""
+        n_samples, n_features = Samples.shape[1] if not self.n_features else min(self.n_features, Samples.shape[1])
+        # allow the tree to grow as needed
+        self. root = self.__grow_tree(Sample, features)
+        return
