@@ -23,4 +23,10 @@ class Node:
         self.left = left
         self.right = right
         self.value = value
-        
+
+    def fit(self, Samples, features):
+        """make sure the tree does not grow larger than the number of existing features"""
+        self.n_features = Samples.shape[1] if not self.n_features else min(self.n_features, Samples.shape[1])
+        # allows tree to grow
+        self.root = self._grow_tree(Samples, features)
+        return
