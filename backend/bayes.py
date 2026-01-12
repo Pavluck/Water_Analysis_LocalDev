@@ -33,7 +33,36 @@ class Node:
 
     def __grow_tree(self, Samples, features, depth=0):
         """Grows the tree based on number of samples and features"""
-        n_samples, n_features = Samples.shape[1] if not self.n_features else min(self.n_features, Samples.shape[1])
+        n_samples, n_features = Samples.shape
+        n_labels = len(np.unique(features))
+        # give stopping criterea for growing a tree
+        if (depth >= self.max_depth or n_labels == 1) or n_samples < self.min_samples_split:
+            # check for max depth to find a leaf node
+            leaf_value = se;f._most_common_label(features)
+            return Node(value=leaf_value)
         # allow the tree to grow as needed
-        self. root = self.__grow_tree(Sample, features)
-        return
+        feat_idxs = np.random.choice(n_features, self.n_features, replace = False)
+        # greedy approach for tree traversal to find most likley prediction
+        best_feat, best_threst = self._best_criteria(Samples, features, feat_idxs) 
+        # split tree with best feature
+        left_idxs, right_idxs = self._split(Samples[:, best_feat], best_threst)
+        left = self._grow_tree(Samples[left_idxs, :], features[left_idxs], depth+1)
+        right = self._grow_tree(Samples[right_idxs,:], features[right_idxs], depth+1)
+        
+        return Node(best_feat, best_threst, left, right)
+
+    def _best_criteria(self, Samples, features, feat_idxs): 
+        """Helper function for tree traversal"""
+        best_gain = -1  # go through all features
+        split_index, split_thresh = None, None
+        for feat_idx in feat_idxs:
+            samples_column = Samples[:, feat_idx]
+            thresholds = np.unique(samples_column)  # don't check the same value twice
+            for threshold in thresholds:
+                gain = self._information_gain(features, samples_column, threshold)
+                if gain > best_gain: # update values based on one of the 7 deadly sins - greed
+                    best_gain = gain    
+                    split_index = feat_idx
+                    split_thresh = threshold
+        return split_index, split_thresh
+     
