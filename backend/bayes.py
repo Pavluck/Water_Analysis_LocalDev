@@ -65,4 +65,21 @@ class Node:
                     split_index = feat_idx
                     split_thresh = threshold
         return split_index, split_thresh
-     
+
+    def _information_gain(self, features, samples_column, split_threshold):
+        """Implement the Information Gain Formula """
+        # entapoy of parent and weighted av of children
+        parent_entropy = entropy(features)
+        # gen split
+        left_idxs, right_idxs = self._split(samples_column, split_threshold)
+        # nothing ventured, nothing gained
+        if len(left_idxs) == 0 or len(right_idxs):
+            return 0 
+        # calc the weighted av children's entropy
+        n = len(features)
+        n_left, n_right = len(left_idxs), len(right_idxs)
+        ent_left, ent_right = entropy(features[left_idxs]), entropy(features[right_idxs])
+        child_entropy = (n_left/n) * ent_left + (n_right/n)*ent_right
+        # return the ventures gained
+        igain = parent_entropy - child_entropy
+        return igain
