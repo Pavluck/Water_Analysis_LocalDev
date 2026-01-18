@@ -17,4 +17,16 @@ class VideoProcessor:
       """
       self.target_size = target_size
       self.fps = fps
-      
+
+    def recieve(self, video_path: str) -> Optional[csv.VideoCapture]:
+        """This function receives video from the frontend, the csv
+        library allows optional live streaming. Requires a video path.
+        Returns the captured video as an object"""
+        try:
+            capture = csv.VideoCapture(video_path)
+            if not capture.isOpened():
+                raise ValueError(f"Cannot open video from: {video_path}")
+            return capture
+        except Exception as e:
+            print(f"Error loading video: {e}")
+            return None
