@@ -83,3 +83,9 @@ class Node:
         # return the ventures gained
         igain = parent_entropy - child_entropy
         return igain
+
+    def _split(self, samples_column, split_thresh):
+        """Helper function to assist with branching"""
+        left_indexes = np.argwhere(samples_column <= split_thresh).flatten() # array of conditions as a 1D vector
+        right_idxs = np.argwhere(samples_column > split_thresh).flatten()
+        return left_indexes, right_idxs
