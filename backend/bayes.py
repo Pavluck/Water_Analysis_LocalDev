@@ -89,3 +89,7 @@ class Node:
         left_indexes = np.argwhere(samples_column <= split_thresh).flatten() # array of conditions as a 1D vector
         right_idxs = np.argwhere(samples_column > split_thresh).flatten()
         return left_indexes, right_idxs
+
+    def predict(self, Samples):
+        """Takes the samples from the Tree and returns an array of predicted values"""
+        return np.array([self._traverse_tree(sample, self.root) for sample in Samples])
