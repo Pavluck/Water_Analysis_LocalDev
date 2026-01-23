@@ -7,4 +7,22 @@ import Home from "./pages/home";
 import WaterAIform from "./pages/dataform";
 import References from "./pages/references";
 
-// ------- Page Content -----------
+// ~~~~~~ Page Content ~~~~~~
+function App() {
+  return (
+      <div className='App'>
+        <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/dataform" element={<WaterAIform />} />
+          <Route path="/references" element={<References />} />
+        </Routes>
+        </Router>
+      <footer>
+            <p> &copy; 2025 Natasha Pavelek</p>
+      </footer>
+      </div>
+  );
+}
+export default App;
