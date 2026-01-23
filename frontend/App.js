@@ -20,7 +20,7 @@ function App() {
         </Routes>
         </Router>
       <footer>
-            <p> &copy; 2025 Natasha Pavelek</p>
+            <p> &copy; 2026 Natasha Pavelek</p>
       </footer>
       </div>
   );
