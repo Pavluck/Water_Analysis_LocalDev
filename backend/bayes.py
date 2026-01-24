@@ -93,3 +93,14 @@ class Node:
     def predict(self, Samples):
         """Takes the samples from the Tree and returns an array of predicted values"""
         return np.array([self._traverse_tree(sample, self.root) for sample in Samples])
+
+    def _traverse_tree(self, sample, node):
+        """Recursively traverses the tree until a leaf node is reached"""
+        # base case:
+        if node.reached_leaf():
+            return node.value
+        # recursive case: make a choice based on the prediction weights and threshold
+        if sample[node.feature] <= node.threshold:
+            return self._traverse_tree(sample, node.left)
+        # else visit other node
+        return self._traverse_tree(sample, node.right)
