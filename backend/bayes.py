@@ -104,3 +104,8 @@ class Node:
             return self._traverse_tree(sample, node.left)
         # else visit other node
         return self._traverse_tree(sample, node.right)
+    """DAG, reaches a leaf - the leaf uses Probability to calculate a decision"""
+    def _most_common_label(self, features):
+        """Calculate the number of occurances"""
+        counter = Counter(features) # from most to least common tuples
+        return counter.most_common(1)[0][0]
