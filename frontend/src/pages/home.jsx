@@ -1,11 +1,21 @@
-/* ------------ Home page for the water software ------------*/
+/* ~~~~~ ✸ Home page for the water software ✸ ~~~~~
 
 /* ------------ Necessary Imports ------------*/
 import React from 'react';
 import { Link } from "react-router-dom"
 import { useNavigate } from 'react-router-dom';
-/* ------------ TODO add Navigation ------------*/
-
+import WaterAIform from './dataform';
+import References from './references';
+/* ------------ Navigation ------------*/
+function Home() {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate('/dataform');
+  };
+  const Aboutbutton = () => {
+    navigate('/references');
+  };
+}
 /* ------------ Page Content  ------------*/
 const Home = () => {
   return (
