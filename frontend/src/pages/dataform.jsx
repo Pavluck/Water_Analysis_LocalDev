@@ -11,6 +11,14 @@ import Home from './home';
 
 /* ------------ Navigation ------------*/
 function WaterAIform() {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate('/home');
+  };
+  const Aboutbutton = () => {
+    navigate('/references');
+  };
+  
   return ()
 }
 export default WaterAIform;
