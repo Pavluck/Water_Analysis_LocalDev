@@ -1,6 +1,7 @@
 """
-NP ˚❀༉‧ Preprocessing video data for CNN input.
-This module handles receiving video input from the frontend, cleaning the video frames, and formatting them into a structure suitable for CNN models.
+NP ✧ Preprocessing video data for CNN input.
+Handles receiving video input from the frontend, 
+cleaning the video frames, and formatting them into a structure suitable for CNN models.
 """
 # ~~~~ Necessary Imports ~~~~
 import cv2  # OpenCV (Open Source Computer Vision Library)
@@ -19,9 +20,9 @@ class VideoProcessor:
       self.fps = fps
 
     def recieve(self, video_path: str) -> Optional[csv.VideoCapture]:
-        """This function receives video from the frontend, the csv
-        library allows optional live streaming. Requires a video path.
-        Returns the captured video as an object"""
+        """Receives video using a video path.
+        Returns the captured video as an object
+        Note: CSV library to allow optional streaming."""
         try:
             capture = csv.VideoCapture(video_path)
             if not capture.isOpened():
@@ -30,3 +31,11 @@ class VideoProcessor:
         except Exception as e:
             print(f"Error loading video: {e}")
             return None
+            
+    def frame_cleaning(self, frame: np.ndarray)-> np.ndarry:
+        """Given an input frame, clean and return normalized video"""
+        # resize & convert
+        frame = cv2.resize(frame, (self.target_size[1]), self.target_size[0])
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # normalize
+        return (frame.astype(np.float32)/255)
