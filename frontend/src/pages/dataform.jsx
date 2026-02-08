@@ -10,7 +10,7 @@ import References from './references';
 import Home from './home';
 
 /* ------------ Navigation ------------*/
-function WaterAIform() {
+function Waterform() {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate('/home');
@@ -18,6 +18,18 @@ function WaterAIform() {
   const Aboutbutton = () => {
     navigate('/references');
   };
+
+/* ------------ Frontend Functionality ------------*/
+  const [ph_level, setph_level] = useState('');
+  const [chlorine, setchlorine] = useState('');
+  const [watercolor, setwatercolor] = useState('');
+  const [TDS, setTDS] = useState('');
+  const [CFU, setCFU] = useState('');
+  const [algae, setalgae] = useState(false);
+  const [decision, setdecision] = useState('');
+  const [responseMessage, setResponseMessage] = useState('');
+  const formRef = useRef(null);
+  const [waiting, setWaiting] = useState(false);
 /* ------------ Page Content: Form for UI ------------*/
   return (
     <div>
@@ -78,5 +90,5 @@ function WaterAIform() {
     </div>
   )
 }
-export default WaterAIform;
+export default Waterform;
 
