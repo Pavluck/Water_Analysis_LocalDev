@@ -8,3 +8,11 @@ from random import randint
 import json
 from flask import *
 from flask_cors import CORS
+# ~~~~~ Port ~~~~
+app = Flask(__name__,
+            static_url_path = '',
+            static_folder='static',)
+# ~~~~ CORS ~~~~
+CORS(app,
+     origins=os.getenv('CORS_ORIGINS', 'http://localhost:3000').split(','),
+     supports_credentials=True)
