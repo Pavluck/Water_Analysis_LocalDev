@@ -30,6 +30,30 @@ function Waterform() {
   const [responseMessage, setResponseMessage] = useState('');
   const formRef = useRef(null);
   const [waiting, setWaiting] = useState(false);
+
+  /* ~~~~~~~~~ 
+  Handle Payload to the backend
+  ~~~~~~~~~ */
+  const handleWaterColorChange = color => setwatercolor(color);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    /* package the frontend form data */
+    console.log('ph_level:', ph_level);
+    console.log('chlorine:', chlorine);
+    console.log('watercolor:', watercolor);
+    console.log('TDS:', TDS);
+    console.log('CFU', CFU);
+    console.log('algae', algae);
+    /* prepare for data to be sent to backend, package the JSON key value pairs*/
+    const payload = {
+      'ph_level': ph_level,
+      'chlorine': chlorine,
+      'color': watercolor,
+      'TDS':TDS,
+      'CFU': CFU,
+      'algae': algae
+    };
+  };
 /* ------------ Page Content: Form for UI ------------*/
   return (
     <div>
