@@ -16,3 +16,13 @@ app = Flask(__name__,
 CORS(app,
      origins=os.getenv('CORS_ORIGINS', 'http://localhost:3000').split(','),
      supports_credentials=True)
+
+# ~~~~~~~ Functions & Formulas ~~~~~~~
+@app.route('/decision', methods=['POST'])
+def decision():
+            """Uses the data from the frontend and sends the decision whether the 
+            water is potable or not to the frontend"""
+            data = request.get_json()
+            if not data:
+                        return jsonify({'error': 'No input data provided'}), 400
+            print(data)
