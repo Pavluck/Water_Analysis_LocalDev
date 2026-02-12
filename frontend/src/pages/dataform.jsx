@@ -53,6 +53,28 @@ function Waterform() {
       'CFU': CFU,
       'algae': algae
     };
+
+    // Set a waiting state for useability
+    setWaiting(true);
+    setResponseMessage("Please wait ...");
+    setdecision("Please wait...");
+    // make a POST request to send data to backend
+      axois
+        .post(process.env.REACT_APP_BACKEND_HOSTNAME + "/decision", payload)
+        .then((response) => {
+          setWaiting(false);
+          console.log("Response from backend" + JSON.stringify(response, null, 2));
+          const data = response.data;
+          setdecision(data['decision']);
+          window.alert = ("Data sent! Scroll down to see")
+        })
+        .catch((err) => {
+          setWaiting(false);
+          console.error("Error sending data: ", err);
+          setResponseMessage("Error sending data");
+          setdecision("Error sending data");
+          window.alert = ("Error sending data")
+        });
   };
 /* ------------ Page Content: Form for UI ------------*/
   return (
