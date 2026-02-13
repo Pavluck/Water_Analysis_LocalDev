@@ -26,3 +26,13 @@ def decision():
             if not data:
                         return jsonify({'error': 'No input data provided'}), 400
             print(data)
+            #default safeguard 
+            decision = "Oops, water not found! Analysis incomplete")
+            ph_level = None
+            chlorine = None
+            color = None
+            TDS = None
+            CFU = None
+            algae = None
+            # TODO: validate data from frontend
+
