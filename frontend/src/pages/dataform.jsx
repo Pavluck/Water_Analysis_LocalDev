@@ -76,6 +76,16 @@ function Waterform() {
           window.alert = ("Error sending data")
         });
   };
+/* ------------ Function to clear data form ------------*/
+    const handleClear = () => {
+      setph_level('');
+      setchlorine('');
+      setwatercolor('');
+      setTDS('');
+      setCFU('');
+      setalgae(false);
+      setdecision('');
+    };
 /* ------------ Page Content: Form for UI ------------*/
   return (
     <div>
