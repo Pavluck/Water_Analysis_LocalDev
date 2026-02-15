@@ -15,6 +15,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 This project requires Python with FLASK along with Flask-CORS for security measures   
 Instruction on how to [install Python](https://wiki.python.org/moin/BeginnersGuide/Download)  
 
+Make sure you have the following installed:
+Python & Python Interpreter
+node.js
+pip for installing Python packages
+
 ## Configure for Python using Visual Studio Code  
 1. Make sure you have the Python extension in VS Code (Visual Studio Code)
 2. Make sure Python is installed on your Operating System
