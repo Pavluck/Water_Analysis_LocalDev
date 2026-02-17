@@ -34,5 +34,11 @@ def decision():
             TDS = None
             CFU = None
             algae = None
-            # TODO: validate data from frontend
-
+            
+            # validate data from frontend
+            if 'ph_level' in data and data['ph_level'] is not None and data ['ph_level'] != '':
+                        try:
+                                    ph_level = float(data['ph_level'])
+                        except:
+                                    return jsonify({'error: PH level is invalid, needs to be a value between 0 & 14'},400)       
+            # TODO: validate for other features
