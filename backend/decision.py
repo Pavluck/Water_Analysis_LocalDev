@@ -40,5 +40,10 @@ def decision():
                         try:
                                     ph_level = float(data['ph_level'])
                         except:
-                                    return jsonify({'error: PH level is invalid, needs to be a value between 0 & 14'},400)       
+                                    return jsonify({'error: PH level is invalid, needs to be a value between 0 & 14'},400)   
+            if 'chlorine' in data and data['chlorine'] is not None and data ['chlorine'] != '':
+                        try:
+                               chlorine = float(data['chlorine'])
+                        except:
+                                    return jsonify({'error: Chlorine is invalid, needs to be a value between 0 and 1 million'}, 400)            
             # TODO: validate for other features
