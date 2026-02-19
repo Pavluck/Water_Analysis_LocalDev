@@ -45,5 +45,16 @@ def decision():
                         try:
                                chlorine = float(data['chlorine'])
                         except:
-                                    return jsonify({'error: Chlorine is invalid, needs to be a value between 0 and 1 million'}, 400)            
+                                    return jsonify({'error: Chlorine is invalid, needs to be a value between 0 and 1 million'}, 400) 
+            if 'color' in data and data['color'] is not None and data['color'] != '':
+                        color = data['color']
+                        color_hsv = color['hsv']
+                        hue = float(color_hsv['h'])
+                        # analysis water that is too vivid
+                        if 174.0 < hue < 232:
+                                    sat = float(color_hsv['s'])
+                                    if 0.0 <= sat < 0.92:
+                                                pass
+                                    else:
+                                                decision = "This water's coloration is oddly vivid but may be potable"
             # TODO: validate for other features
