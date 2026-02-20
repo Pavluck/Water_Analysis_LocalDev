@@ -142,6 +142,12 @@ function Waterform() {
         Is there algae present in this body of water?
         <input style={{ width:'45px', height: '30px', padding:'2px', margin:'2px'}} type="checkbox" checked={algae} onChange={(e) => setalgae(!algae)} />
       </label>
+      <p></p>
+      {
+        waiting 
+        ? (<button className="waterbutton" disabled>Please wait . . .</button>)
+        : (<button className="waterbutton" type="submit">Submit</>)
+      }
     </form></container>
     </div>
   )
