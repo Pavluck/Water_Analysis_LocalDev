@@ -15,6 +15,7 @@ from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 from torchvision import transforms
 # ~~~~ Load the Data ~~~~
+"""This uses the Data from Roboflow, filepaths may need to be updated"""
 Training_Images = r"ML_Water_LocalDev\Water-Images\train"
 Testing = r"ML_Water_LocalDev\Water-Images\valid"
 Training_labels = r"ML_Water_LocalDev\Water-Images\train\_annotations.csv"
@@ -35,4 +36,9 @@ class WaterQualityDataset(Dataset):
 
         self.label_encoder = LabelEncoder()
         self.label_encoder.fit(self.data['class'].unique())
-      
+
+    def __getitem__(self, index):
+        """ Using an index from the dataframe, PyTorch matches it to fetch the image data and labels for a specific index during training. """
+        imgname = str(self.data.iloc[idx]['filename'])
+        imgpath = f"{self.img_dir}\\{imgname}"
+        image = Image.open(imgpath).convert("RGB")
