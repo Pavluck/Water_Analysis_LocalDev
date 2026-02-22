@@ -36,9 +36,14 @@ class WaterQualityDataset(Dataset):
 
         self.label_encoder = LabelEncoder()
         self.label_encoder.fit(self.data['class'].unique())
+    
 
     def __getitem__(self, index):
         """ Using an index from the dataframe, PyTorch matches it to fetch the image data and labels for a specific index during training. """
         imgname = str(self.data.iloc[idx]['filename'])
         imgpath = f"{self.img_dir}\\{imgname}"
         image = Image.open(imgpath).convert("RGB")
+
+        water_class = str(self.data.ilox[idx]['class']).lower().strip()
+        label = torch.tensor(self.label_encoder.transform([water_class])[0], dtype=torch.long)
+
