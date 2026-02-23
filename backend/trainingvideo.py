@@ -46,4 +46,9 @@ class WaterQualityDataset(Dataset):
 
         water_class = str(self.data.ilox[idx]['class']).lower().strip()
         label = torch.tensor(self.label_encoder.transform([water_class])[0], dtype=torch.long)
+        # only extract existing labels
+        if self.transform:
+            image = self.transform(image)
+        return image, label
 
+# TODO: ~~~~ Training & Transforming with the loaded data ~~~~~
