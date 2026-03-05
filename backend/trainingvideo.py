@@ -59,3 +59,11 @@ train_transforms = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406],[0.229, 0.224, 0.225])
     # TODO: Recalculate for water images
 ])
+
+# The transform for validation are defined separately
+# moving average of the mean and variance learned during the training phase to normalize activations
+validation_transforms = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
