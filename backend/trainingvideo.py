@@ -1,22 +1,41 @@
 """
-NP ˚❀༉‧ Training water quality detection model using image data.
-This module handles loading water quality images from the Water-Images dataset,
-training a CNN model to classify water clarity, and managing training/validation splits.
+NP ˚❀༉‧ Training water quality detection model using Roboflow image data.
+Loads, trains, and saves a CNN model to classify water potability.
 """
 
 # ~~~~ Necessary Imports ~~~~
+import os
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
+import numpy as np
 import torch
+import torch.nn as nn
+import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from PIL import Image
-from torchvision import transforms
+from torchvision import transforms, models
+import matplotlib.pyplot as plt
+
 # ~~~~ Load the Data ~~~~
 """This uses the Data from Roboflow, filepaths may need to be updated"""
 Training_Images = r"ML_Water_LocalDev\Water-Images\train"
 Testing = r"ML_Water_LocalDev\Water-Images\valid"
 Training_labels = r"ML_Water_LocalDev\Water-Images\train\_annotations.csv"
 Testing_labels = r"ML_Water_LocalDev\Water-Images\valid\_annotations.csv"
+
+# ~~~~ Hyperparameters and Configurations ~~~~
+"""
+creates a symbolic handle representing an NVIDIA GPU. It is the standard way to transition computations from the CPU to the GPU 
+checks if a compatible NVIDIA GPU is available and sets the device accordingly. If a GPU is present, it will use it for training the model
+
+Reference: https://docs.pytorch.org/docs/stable/cuda.html
+
+TLDR; allows the code to run efficiently on systems with a GPU while still being compatible with those without one.
+"""
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+batchSize = 32
+Epoches = 20
+LEARNING_RATE = 0.001
+CNNFilePath = "water_potability_image_model.pth"
 
 class WaterQualityDataset:
     """reads data from CSV and returns (image_tensor, label)."""
