@@ -1,6 +1,6 @@
 """
-NP ˚❀༉‧ Training water quality detection model using Roboflow image data.
-Loads, trains, and saves a CNN model to classify water potability.
+NP ˚❀༉‧ Water AI CNN model 
+Loads the training data (from Roboflow), training, then saves a CNN model to classify water potability.
 """
 
 # ~~~~ Necessary Imports ~~~~
@@ -27,7 +27,7 @@ Testing_labels = r"ML_Water_LocalDev\Water-Images\valid\_annotations.csv"
 creates a symbolic handle representing an NVIDIA GPU. It is the standard way to transition computations from the CPU to the GPU 
 checks if a compatible NVIDIA GPU is available and sets the device accordingly. If a GPU is present, it will use it for training the model
 
-Reference: https://docs.pytorch.org/docs/stable/cuda.html
+Reference: https://github.com/opencv/opencv/issues/20227
 
 TLDR; allows the code to run efficiently on systems with a GPU while still being compatible with those without one.
 """
@@ -37,6 +37,20 @@ Epoches = 20
 LEARNING_RATE = 0.001
 CNNFilePath = "water_potability_image_model.pth"
 
+# ~~~~ Class for Loading Roboflow Dataset into Pytorch ~~~~
+class RoboflowData(Dataset):
+    """Pytorch works well with Roboflow data
+    https://docs.pytorch.org/docs/stable/cuda.html"""
+    def __init__(self, images, target, trainsform=None):
+        """ 
+        Ues the directory of images and the CSV file containing labels to prepare the dataset for training.
+            images_dir: Directory containing images
+            labels_csv: Path to CSV with image filenames and labels
+            transform: Image transformations to apply (None for now)
+        """
+        self.images = images
+        self.transform = transform
+        
 class WaterQualityDataset:
     """reads data from CSV and returns (image_tensor, label)."""
     Potable_labels = {'clear': 'potable', 'murky': 'not_potable'}
