@@ -50,6 +50,20 @@ class RoboflowData(Dataset):
         """
         self.images = images
         self.transform = transform
+        # Load Labels to identify potatbility Targets
+        self.annotations = pd.read_csv(target)
+        # Train that Clear water is more likely to be potable
+        self.class_to_idx = {
+            'potable':0,
+            'not_potable':0,
+            'clear':0,
+            'murky':1
+        }
+        # helper prints (for training details/debugging) to see what CNN is getting
+        print(f"Loaded {len(self.annotations)} samples from {images}")
+        print(f"Number of Columns/Features: {self.annotations.columns.tolist()}")
+        print(f"Number of Rows/Images: {self.annotations.rows.tolist()}")
+
         
 class WaterQualityDataset:
     """reads data from CSV and returns (image_tensor, label)."""
