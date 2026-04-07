@@ -64,6 +64,49 @@ class RoboflowData(Dataset):
         print(f"Number of Columns/Features: {self.annotations.columns.tolist()}")
         print(f"Number of Rows/Images: {self.annotations.rows.tolist()}")
 
+    def __len__(self):
+        """Minor helper function. Returns the length/dimension of the target"""
+        return len(self.annotations)
+    
+    def __getitem__(self, idx):
+        """Used by DataLoader to determine the size of the dataset with the given index.
+        Applies transformations/preprocessing to return the image/label as tensors
+        """
+        # Get image filename (typically in first column after Roboflow export)
+        row = self.annotations.iloc[idx]
+        image_filename = row.iloc[0]  # First column is usually the filename
+        
+        # Get label (typically in a column named 'class', 'label', or similar)
+        # Try common column names
+        label_col = None
+        for col in ['class', 'label', 'potability', 'clarity']:
+            if col in self.annotations.columns:
+                label_col = col
+                break
+        
+        if label_col is None:
+            # If no standard column found, use the second column
+            label_str = row.iloc[1]
+        else:
+            label_str = row[label_col]
+        
+        # Convert string label to index
+        label = self.class_to_idx.get(str(label_str).lower(), 0)
+        
+        # Load and process image
+        image_path = os.path.join(self.images_dir, str(image_filename).strip())
+        
+        try:
+            image = Image.open(image_path).convert('RGB')
+        except Exception as e:
+            print(f"Error loading image {image_path}: {e}")
+            # Return a blank image if loading fails
+            image = Image.new('RGB', (224, 224))
+        
+        if self.transform:
+            image = self.transform(image)
+        
+        return image, label
         
 class WaterQualityDataset:
     """reads data from CSV and returns (image_tensor, label)."""
