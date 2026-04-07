@@ -107,13 +107,16 @@ class RoboflowData(Dataset):
             image = self.transform(image)
         
         return image, label
-        
-class WaterQualityDataset:
-    """reads data from CSV and returns (image_tensor, label)."""
+
+# ~~~~ CNN Model for Image Classification ~~~~
+class WaterCNN(nn.Module):
+    """reads data (image_tensor, label), builds CNN for classification for water potability"""
     Potable_labels = {'clear': 'potable', 'murky': 'not_potable'}
 
-    def __init__(self, labels, images, transform=None, label_mode=None):
+    def __init__(self, num_classes=2):
         """Anchor the labels, images, the transformation and label type"""
+        super().__init__()
+        
         self.labels = labels
         self.images = imgages
         self.transform = transform
