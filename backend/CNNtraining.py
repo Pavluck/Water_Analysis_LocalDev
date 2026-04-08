@@ -35,7 +35,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 batchSize = 32
 Epoches = 20
 LEARNING_RATE = 0.001
-CNNFilePath = "water_potability_image_model.pth"
+CNNFilePath = "water_potability.pth"
 
 # ~~~~ Class for Loading Roboflow Dataset into Pytorch ~~~~
 class RoboflowData(Dataset):
@@ -76,8 +76,6 @@ class RoboflowData(Dataset):
         row = self.annotations.iloc[idx]
         image_filename = row.iloc[0]  # First column is usually the filename
         
-        # Get label (typically in a column named 'class', 'label', or similar)
-        # Try common column names
         label_col = None
         for col in ['class', 'label', 'potability', 'clarity']:
             if col in self.annotations.columns:
@@ -99,7 +97,7 @@ class RoboflowData(Dataset):
         try:
             image = Image.open(image_path).convert('RGB')
         except Exception as e:
-            print(f"Error loading image {image_path}: {e}")
+            print(f"Oopsie Daisy~ Error loading image {image_path}: {e}")
             # Return a blank image if loading fails
             image = Image.new('RGB', (224, 224))
         
@@ -111,7 +109,6 @@ class RoboflowData(Dataset):
 # ~~~~ CNN Model for Image Classification ~~~~
 class WaterCNN(nn.Module):
     """reads data (image_tensor, label), builds CNN for classification for water potability"""
-    Potable_labels = {'clear': 'potable', 'murky': 'not_potable'}
 
     def __init__(self, num_classes=2):
         """Anchor the labels, images, the transformation and label type"""
@@ -129,9 +126,9 @@ class WaterCNN(nn.Module):
             nn.Linear(256, num_classes)
         )
 
-    def __len__(self):
-        """Returns the total number of samples in the dataset"""
-        return len(self.images)
+    def forward(self, data):
+        """Forward propogation, returns the feature map given the input tensor data"""
+        return self.backbone(data)
 
     def __getitem__(self, index):
         """ Using an index from the dataframe, PyTorch matches it to fetch the image data and labels for a specific index during training. """
