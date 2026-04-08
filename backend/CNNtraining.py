@@ -24,7 +24,7 @@ Testing_labels = r"ML_Water_LocalDev\Water-Images\valid\_annotations.csv"
 
 # ~~~~ Hyperparameters and Configurations ~~~~
 """
-creates a symbolic handle representing an NVIDIA GPU. It is the standard way to transition computations from the CPU to the GPU 
+transition computations from the CPU to the GPU 
 checks if a compatible NVIDIA GPU is available and sets the device accordingly. If a GPU is present, it will use it for training the model
 
 Reference: https://github.com/opencv/opencv/issues/20227
@@ -116,17 +116,18 @@ class WaterCNN(nn.Module):
     def __init__(self, num_classes=2):
         """Anchor the labels, images, the transformation and label type"""
         super().__init__()
-        
-        self.labels = labels
-        self.images = imgages
-        self.transform = transform
-        self.label_mode = label_mode
 
-        if label_mode == 'potability':
-            self.data['class'] = self.data['class'].str.lower().str.strip().map(self.Potable_labels)
-
-        self.label_encoder = LabelEncoder()
-        self.label_encoder.fit(self.data['class'].unique())
+        # Use ResNet18's pretrained backbone
+        # a standard approach for transfer learning, 
+        # where the model is initialized with weights trained on ImageNet
+        self.backbone = models.resnet18(pretrained=True)
+        # now modify the fully connected layer from the backbone; prepares for binary classification
+        num_features = self.backbone.fc.in_features
+        self.backbone.fc = nn.Sequential(
+            nn.Linear(num_features, 256),
+            nn.ReLU(), nn.Dropout(0.5),
+            nn.Linear(256, num_classes)
+        )
 
     def __len__(self):
         """Returns the total number of samples in the dataset"""
