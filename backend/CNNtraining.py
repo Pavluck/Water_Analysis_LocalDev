@@ -157,3 +157,31 @@ validation_transforms = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
+
+#~~~~~~~ Time to Train ~~~~~~~
+def train_epoch(model, train_loader, criterion, optimizer, device):
+    """Trains a single epoch"""
+    model.train()
+    # Init Values
+    total_loss = 0.0
+    correct = 0
+    total = 0
+    # training loop 
+    for images, labels in train_loader:
+        # load the data, loops per batch
+        images = images.to(device)
+        labels = labels.to(device)
+        # first forward propagation
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        # then backward propagation
+        optimizer.zero_grad()   # freshen gradients
+        loss.backward()
+        optimizer.step()  # update weight
+        # update loss
+        total_loss += loss.item()
+        # correct the right elements
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+        
