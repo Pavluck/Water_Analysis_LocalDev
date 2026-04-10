@@ -160,7 +160,7 @@ validation_transforms = transforms.Compose([
 
 #~~~~~~~ Time to Train ~~~~~~~
 def train_epoch(model, train_loader, criterion, optimizer, device):
-    """Trains a single epoch"""
+    """Trains a single epoch, returns the loss and accuracy"""
     model.train()
     # Init Values
     total_loss = 0.0
@@ -184,4 +184,7 @@ def train_epoch(model, train_loader, criterion, optimizer, device):
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
-        
+    # calculate the average loss for that epoch
+    avg_loss = total_loss / len(train_loader)
+    accuracy = 100 * correct/total
+    return avg_loss, accuracy
