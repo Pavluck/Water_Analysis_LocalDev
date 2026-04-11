@@ -188,3 +188,34 @@ def train_epoch(model, train_loader, criterion, optimizer, device):
     avg_loss = total_loss / len(train_loader)
     accuracy = 100 * correct/total
     return avg_loss, accuracy
+
+# ~~~ Test and Validation ~~~
+def validate(model, val_loader, criterion, device):
+    """Similar to training, it loops through batches checking loss and accuracy
+    Unlike training, doesn't update weights
+    "A validation loop checks how well a trained model works on new data it hasn't seen before."
+    Source: https://leyaa.ai/codefly/learn/pytorch/part-1/pytorch-validation-loop
+    """
+    model.eval()
+    total_loss = 0.0
+    correct = 0
+    total = 0
+    # Disable gradient tracking with torch.no_grad(), saves memory during evaluation.
+    with torch.no_grad():
+        for images, labels in val_loader:
+            images = images.to(device)
+            labels = labels.to(device)
+
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+
+            batch_size = labels.size(0)
+            total_loss += loss.item() * batch_size
+
+            _, predicted = torch.max(outputs, 1)
+            total += batch_size
+            correct += (predicted == labels).sum().item()
+
+    avg_loss = total_loss / total
+    accuracy = 100.0 * correct / total
+    return avg_loss, accuracy
