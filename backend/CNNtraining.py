@@ -231,4 +231,9 @@ if __name__ == "__main__":
     )
     
     valid_dataset = RoboflowData(Testing, Testing_Target, transform=validation_transforms)
-    
+    # use Pytorch for data loaders
+    train_loader = DataLoader(
+        train_dataset, batch_size=batchSize, shuffle=True, num_workers=0)
+    valid_loader = DataLoader(
+        valid_dataset, batch_size=batchSize, shuffle=False, num_workers=0)
+    print(f"Training samples: {len(train_dataset)} \n Validation samples: {len(valid_dataset)}")
