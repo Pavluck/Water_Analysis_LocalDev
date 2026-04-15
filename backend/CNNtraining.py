@@ -219,3 +219,16 @@ def validate(model, val_loader, criterion, device):
     avg_loss = total_loss / total
     accuracy = 100.0 * correct / total
     return avg_loss, accuracy
+    
+# ~~~ CNN training & creation ~~~
+if __name__ == "__main__":
+    # entry point
+    print("CNN Training")
+    # use class function to load data
+    train_dataset = RoboflowData(
+        # Class needs Directory containing images, Path to CSV, Image transformations to apply
+        Training, Training_Target, transform=train_transforms
+    )
+    
+    valid_dataset = RoboflowData(Testing, Testing_Target, transform=validation_transforms)
+    
