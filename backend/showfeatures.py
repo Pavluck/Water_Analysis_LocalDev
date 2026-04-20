@@ -15,3 +15,13 @@ import torch.nn as nn
 from PIL import Image
 from pathlib import Path
 from testvideostream import load_water_model, test_transforms
+
+# ~~~~ Global Constant ~~~~~
+Directory = Path(__file__).resolve().parent
+"""
+ensures the scripts can find own directory 
+regardless of from where the command is executed.
+"""
+if str(Directory) not in sys.path:
+  # safegaurd to prevent duplicate entries in path
+  sys.path.insert(0, str(Directory)
