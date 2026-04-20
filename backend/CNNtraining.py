@@ -242,4 +242,10 @@ if __name__ == "__main__":
     print("Testing data loader for this batch \n")
     images, labels = next(iter(train_loader)
     print(f"Image shape: {images.shape} \n Label shape: {labels.shape} \n")
+
+    # Setup Model
+    model = WaterCNN(num_classes=2).to(device)
+    print(f"model loaded on {device}")
+    
+    # Training setup
     
