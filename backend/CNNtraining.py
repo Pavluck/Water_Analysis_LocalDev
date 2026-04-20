@@ -237,3 +237,9 @@ if __name__ == "__main__":
     valid_loader = DataLoader(
         valid_dataset, batch_size=batchSize, shuffle=False, num_workers=0)
     print(f"Training samples: {len(train_dataset)} \n Validation samples: {len(valid_dataset)}")
+
+    # Test Batch
+    print("Testing data loader for this batch \n")
+    images, labels = next(iter(train_loader)
+    print(f"Image shape: {images.shape} \n Label shape: {labels.shape} \n")
+    
