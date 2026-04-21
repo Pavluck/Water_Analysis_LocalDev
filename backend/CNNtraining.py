@@ -248,4 +248,9 @@ if __name__ == "__main__":
     print(f"model loaded on {device}")
     
     # Training setup
-    
+    criterion = nn.CrossEntropyLoss()    # https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html
+    optimizer = optim.Adam(model.parameters(), lr=.001) # lr can also be LEARNING_RATE
+    scheduler = optim.lr_schedular.StepLR(optimizer, step_size=10, gammo=0.1)    # # https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.StepLR.html
+    train_losses, train_accs, val_losses, val_accs = [], [], [], []
+    print(f"\n Starting training ({Epoches} epochs)")
+    print("~~~~~~༘★~~~~~")
