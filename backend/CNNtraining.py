@@ -253,4 +253,18 @@ if __name__ == "__main__":
     scheduler = optim.lr_schedular.StepLR(optimizer, step_size=10, gammo=0.1)    # # https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.StepLR.html
     train_losses, train_accs, val_losses, val_accs = [], [], [], []
     print(f"\n Starting training ({Epoches} epochs)")
+    
+    # Training loop
     print("~~~~~~༘★~~~~~")
+    for epoch in range(Epoches):
+        train_loss, train_axx = train_epoch(model, train_loader, criterion, optimzer, device)
+        val_loss, val_acc = validate(model, valid_loader, criterion, device)
+        train_losses.append(train_loss)
+        train_acc.append(train_acc)
+        val_losses.append(val_loss)
+        val_acc.append(val_acc)
+        scheduler.step()
+        print(f"Epoch {epoch+1:2d}/{Epoches} | "
+              f"Train Loss: {train_loss:.4f}, Acc: {train_acc:.2f}% | "
+              f"Val Loss: {val_loss:.4f}, Acc: {val_acc:.2f}%")
+    print("~~~~~~~~~~~~~~~~~")
