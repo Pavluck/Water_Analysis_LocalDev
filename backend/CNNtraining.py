@@ -1,12 +1,13 @@
 """
 NP ˚❀༉‧ Water AI CNN model 
 Loads the training data (from Roboflow), training, then saves a CNN model to classify water potability.
+
+TODO: Add early stopping, model checkpointing, and maybe a training summary CSV/logging. Also consider adding TensorBoard support for visualizing training progress.
 """
 
 # ~~~~ Necessary Imports ~~~~
 import os
 import pandas as pd
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -35,9 +36,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 batchSize = 32
 Epoches = 20
 LEARNING_RATE = 0.001
-CNNFilePath = "water_potability.pth"
+CNNFilePath = "CNNv2.1.pth"
 
-# ~~~~ Class for Loading Roboflow Dataset into Pytorch ~~~~
+# ~~~~ Class for Loading Images ~~~~
 class RoboflowData(Dataset):
     """Pytorch works well with Roboflow data
     https://docs.pytorch.org/docs/stable/cuda.html"""
@@ -50,15 +51,10 @@ class RoboflowData(Dataset):
         """
         self.images = images
         self.transform = transform
-        # Load Labels to identify potatbility Targets
+        # Load Labels to identify potability (Targets)
         self.annotations = pd.read_csv(target)
         # Train that Clear water is more likely to be potable
-        self.class_to_idx = {
-            'potable':0,
-            'not_potable':0,
-            'clear':0,
-            'murky':1
-        }
+        self.class_to_idx = { 'potable':0, 'not_potable':1, 'clear':0, 'murky':1 }
         # helper prints (for training details/debugging) to see what CNN is getting
         print(f"Loaded {len(self.annotations)} samples from {images}")
         print(f"Number of Columns/Features: {self.annotations.columns.tolist()}")
@@ -106,7 +102,7 @@ class RoboflowData(Dataset):
         
         return image, label
 
-# ~~~~ CNN Model for Image Classification ~~~~
+# ~~~~ CNN Model ~~~~
 class WaterCNN(nn.Module):
     """reads data (image_tensor, label), builds CNN for classification for water potability"""
 
@@ -139,7 +135,6 @@ class WaterCNN(nn.Module):
             image = self.transform(image)
         return image, label
 
-# TODO: Finish Training & Transforming with the loaded data ~~~~~
 # ~~~~ Image Transforms ~~~~
 train_transforms = transforms.Compose([
     transforms.Resize((224, 224)),
@@ -268,3 +263,15 @@ if __name__ == "__main__":
               f"Train Loss: {train_loss:.4f}, Acc: {train_acc:.2f}% | "
               f"Val Loss: {val_loss:.4f}, Acc: {val_acc:.2f}%")
     print("~~~~~~~~~~~~~~~~~")
+    # once trained, save the model
+    torch.save(model.state_dict(), CNNFilePath)
+    print(f"Model saved to {CNNFilePath}")
+    # Summary, TODO save to CSV or include a version name
+    print("~~~~~~~~~~~")
+    print("Training Results:")
+    print(f"Final Training Accuracy: {train_accs[-1]:.2f}%")
+    print(f"Final Validation Accuracy: {val_accs[-1]:.2f}%")
+    print(f"Best Validation Accuracy: {max(val_accs):.2f}%")
+    print("\n End of file~ ")
+    print("~~~~~˚❀༉‧~~~~~~")
+    
