@@ -28,7 +28,7 @@ if str(Directory) not in sys.path:
 
 # ~~~~ Class Functions ~~~~~                 
 class FeatureVis:
-  """Loads the CNN"""
+  """Loads the CNN, hooks to a layer to see different levels and extract visual features"""
 
   def __init__(self, model:nn.Module):
     """Initializes the CNN to be ready for feature exraction"""
@@ -36,5 +36,17 @@ class FeatureVis:
     self.features = None
     self.hook = None
     
-  # TODO: hook setup (features, registers, removal) 
-                  
+  # hook setup (features, registers, removal) 
+  def register_hook(self, layer_name:str):
+    """
+    Hook a layer to see different levels of feature extraction
+    Reference: https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.register_forward_hook
+    """
+    for name, module in self.model.named_modules():
+      if name == layer_name:
+        self.hook = module.register_forward_hook(self._hook_fn)
+        print(f"Hooked to layer: {layer_name}")
+        return
+    raise ValueError(f"Error: {layer_name} not found")
+   # TODO remove hook  
+    
