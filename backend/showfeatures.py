@@ -25,3 +25,16 @@ regardless of from where the command is executed.
 if str(Directory) not in sys.path:
   # safegaurd to prevent duplicate entries in path
   sys.path.insert(0, str(Directory)
+
+# ~~~~ Class Functions ~~~~~                 
+class FeatureVis:
+  """Loads the CNN"""
+
+  def __init__(self, model:nn.Module):
+    """Initializes the CNN to be ready for feature exraction"""
+    self.model = model
+    self.features = None
+    self.hook = None
+    
+  # TODO: hook setup (features, registers, removal) 
+                  
