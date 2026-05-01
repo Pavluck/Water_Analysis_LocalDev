@@ -37,7 +37,7 @@ class FeatureVis:
     self.hook = None
     
   # hook setup (features, registers, removal) 
-  def register_hook(self, layer_name:str):
+  def hook_register(self, layer_name:str):
     """
     Hook a layer to see different levels of feature extraction
     Reference: https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.register_forward_hook
@@ -48,5 +48,11 @@ class FeatureVis:
         print(f"Hooked to layer: {layer_name}")
         return
     raise ValueError(f"Error: {layer_name} not found")
-   # TODO remove hook  
+  
+  def hook_remove(self):
+    """Frees the model of the hook"""
+    if self.hook is not None:
+      self.hook.remove()
+      self.hook = None
     
+  # TODO plot feature map for CNN function
