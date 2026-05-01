@@ -27,7 +27,7 @@ if str(Directory) not in sys.path:
   sys.path.insert(0, str(Directory)
 
 # ~~~~ Class Functions ~~~~~                 
-class FeatureVis:
+class Visuals:
   """Loads the CNN, hooks to a layer to see different levels and extract visual features"""
 
   def __init__(self, model:nn.Module):
@@ -55,4 +55,28 @@ class FeatureVis:
       self.hook.remove()
       self.hook = None
     
-  # TODO plot feature map for CNN function
+  # ~~~~ ✧ CNN Visuals ✧ ~~~~
+  def plot_features(self, max_features: int=64, cmap:str = 'viridis'):
+    """ 
+    Viridis highlights different patterns and activations in the CNN features map
+    To quote: "Pretty, oh so pretty"
+    Reference: https://matplotlib.org/stable/tutorials/colors/colormaps.html
+    """
+    if self.features is None:
+      return
+    # ~~~ Setup ~~~
+    num_features = self.features.shape[1]
+    num_visualize = min(num_features, max_features)
+    grid_size = int(np.ceil(np.sqrt(num_visualize)))
+    plt.feature(figsize=(grid_size*2, grid_size*2))
+    # ~~~ Plot loop (plot features one by one) ~~~
+    for i in range(num_visualize):
+      plt.subplot(grid_size, gride_size, i+1)
+      # use imshow to display data as a 2D image
+      plt.imshow(self.features[0,i],cmap=cmap)
+      plt.axis('off')
+    plt.subtitle("Water Analysis ~✧~ Feature Map")
+    plt.tight_layout()
+    plt.show()
+    
+  # TODO plot kernels    
