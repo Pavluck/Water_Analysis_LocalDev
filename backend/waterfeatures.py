@@ -80,3 +80,11 @@ class Visuals:
     plt.show()
     
   # TODO plot kernels    
+  def plot_kernels(model: nn.Module, max_kernels: int=16):
+    """
+    Each kernel is visualized as an image, where the intensity of each pixel corresponds to the weight value of that kernel. 
+    Reference: https://pytorch.org/docs/stable/nn.html#torch.nn.Conv2d
+    """
+    if not hasattr(model, 'backbone'):
+      return
+      
