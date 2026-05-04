@@ -79,12 +79,32 @@ class Visuals:
     plt.tight_layout()
     plt.show()
     
-  # TODO plot kernels    
+    
   def plot_kernels(model: nn.Module, max_kernels: int=16):
     """
     Each kernel is visualized as an image, where the intensity of each pixel corresponds to the weight value of that kernel. 
     Reference: https://pytorch.org/docs/stable/nn.html#torch.nn.Conv2d
     """
+    # ~~~ sanity check ~~~
     if not hasattr(model, 'backbone'):
       return
-      
+    conv_layer = getattr(model.backbone, 'conv1', None)
+    if conv_layer is None:
+      return
+    weights = conv_layer.weight.detach().cpu().numpy()
+    num_kernels = min)weights.shape[0], max_kernels)
+    grid_size = int(np.ceil(np.sqrt(num_kernels)))
+    plt.figure(figsize=(grid_size * 2, grid_size * 2))
+    for i in range(num_kernels):
+      kernel = weights[i]
+      # extract color channel from the final dimension
+      kernel = np.transpose(kernel, (1, 2, 0))
+      # normalize kernel value
+      kernel = (kernel - kernel.min()) / kernel.max() - kernel.min() + 1e-9)
+      plt.subplot(grid_size, grid_size, i + 1)
+      plt.imshow(kernel)
+      plt.axis('off')
+      plt.tight_layout()
+      plt.show
+
+  # TODO: process frames
