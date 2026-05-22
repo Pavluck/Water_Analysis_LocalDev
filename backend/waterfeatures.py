@@ -118,3 +118,14 @@ class Visuals:
     return transform(image).unsqueeze(0)
 
   # TODO Visual CNN features from video/file
+  def run_stream(model: nn.Module, layer_name: str = 'backbone.layer1', source=0, max_frames: int =1):
+    """
+    Hook to file
+    """
+    feature_visualizer = FeatureVisualizer(model)
+    feature_visualizer.register_hook(layer_name)
+    cap = sv2.VideoCapture(source)
+    # sanity check
+    if not cap.isOpened():
+      raise RuntimeError(f"Oopsie Daisy~ Unable to open video source: {source}")
+    # TODO while loop and functionality
