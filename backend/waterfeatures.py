@@ -107,4 +107,14 @@ class Visuals:
       plt.tight_layout()
       plt.show
 
-  # TODO: process frames
+  
+  def preprocess_frame(frame, transform):
+    """
+    Given a BGR frame returns a normalized tensor batch
+    """
+    # CNNS expect 4D tensor (Size, Channels, Height, Width)
+    image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+    # 0th dimension to batch/stack the image
+    return transform(image).unsqueeze(0)
+
+  # TODO Visual CNN features from video/file
