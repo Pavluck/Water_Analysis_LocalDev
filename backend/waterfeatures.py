@@ -128,4 +128,20 @@ class Visuals:
     # sanity check
     if not cap.isOpened():
       raise RuntimeError(f"Oopsie Daisy~ Unable to open video source: {source}")
+    device = next(model.parameters).device
+    frame_index = 0
     # TODO while loop and functionality
+    try:
+      while True:
+        ret, frame = cap.read()
+        if not ret:
+          print("End of stream, or cannot read frame.")
+          break
+        frame_index += 1
+        key = None
+        try:
+          cv2.imshow("Video Stream", frame)
+        except cv2.error:
+          print("Problems, exiting..")
+        # TODO process frames
+
