@@ -117,7 +117,7 @@ class Visuals:
     # 0th dimension to batch/stack the image
     return transform(image).unsqueeze(0)
 
-  # TODO Visual CNN features from video/file
+  # Visual CNN features from video/file
   def run_stream(model: nn.Module, layer_name: str = 'backbone.layer1', source=0, max_frames: int =1):
     """
     Hook to file
@@ -130,7 +130,6 @@ class Visuals:
       raise RuntimeError(f"Oopsie Daisy~ Unable to open video source: {source}")
     device = next(model.parameters).device
     frame_index = 0
-    # TODO while loop and functionality
     try:
       while True:
         ret, frame = cap.read()
@@ -143,5 +142,14 @@ class Visuals:
           cv2.imshow("Video Stream", frame)
         except cv2.error:
           print("Problems, exiting..")
-        # TODO process frames
-
+        # Reference: https://pytorch.org/docs/stable/generated/torch.Tensor.to.html
+        tensor = preprocess_frame(frame, test_transforms).to(device)
+        with torch.no_grad():
+          model(tensor)
+        feature_visualizer.plot_features()
+    finally:
+      cap.release()
+      cv2.destroyAllWindows()
+      except cv2.error:
+        pass
+      feature_visualizer.remove_hook()
