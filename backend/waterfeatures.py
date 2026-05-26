@@ -1,6 +1,6 @@
 """
-☆ NPavelek ☆
-Show CNN features extracted from video frames. 
+☆~ NPavelek ~☆
+Show CNN features extracted from video frames 
 takes the processed video data, runs it through a CNN model, and visualizes the extracted features for analysis.
 Display feature map and kernels 
 """
@@ -163,4 +163,15 @@ def parse_source(source: str):
   except ValueError:
     return source
 
-# TODO Helper to automate visuals for multiple inputs 
+# Helper to automate visuals for multiple inputs 
+def visualize_suite(model, layer):
+  """
+  Takes in multiple URLs for testing and visualization
+  Helps the class function with hooks and cleanup
+  """
+  visualizer = Visuals(model)
+  visualizer.hook_register(layer)
+  # speedup helper
+  device = torch.device("cuda" if torch.cuda.is_avaliable() else "cpu")
+
+# TODO Kernel Visuals
