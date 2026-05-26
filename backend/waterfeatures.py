@@ -153,3 +153,14 @@ class Visuals:
       except cv2.error:
         pass
       feature_visualizer.remove_hook()
+
+def parse_source(source: str):
+  """
+  Translates the camera index, file path, or stream URL into an integer
+  """
+  try:
+    return int(source)
+  except ValueError:
+    return source
+
+# TODO Helper to automate visuals for multiple inputs 
