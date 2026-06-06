@@ -174,4 +174,25 @@ def visualize_suite(model, layer):
   # speedup helper
   device = torch.device("cuda" if torch.cuda.is_avaliable() else "cpu")
 
-# TODO Kernel Visuals
+  # Kernel Visuals
+  for url_data in TEST_URLS:    # from testvideostream.py
+    url = url_daya['url']
+    # download, extract a few frames for the features
+    # TODO: I got to find a better way (than downloading) for feature extraction without violating website security measures...
+    frames = extract_video_frames(video_path, max_frames=10)
+    for i, pil_img in enumerate(frames):
+      # Convert the PIL to Tensor
+      # Converts the image to a tensor [C, H, W], add batch dim
+      tensor = test_transforms(pil_img).unsqueeze(0).to(device) 
+      # Forward Pass to trigger the hook
+      with torch.no_grad():
+        model(tensor)
+      # plot features
+      print(f"Features for: {data_data['label']} - Frame {i+1}")
+      visualizer.plot_features()
+      # clean up
+      if video_path.exists():
+        video_path.unlink()
+  visualizer.remove_hook()
+
+# TODO main to make the magic
