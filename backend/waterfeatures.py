@@ -16,7 +16,7 @@ from PIL import Image
 from pathlib import Path
 from testvideostream import load_water_model, test_transforms
 
-# ~~~~ Global Constant ~~~~~
+# ~~~~ Global Functions ~~~~~
 Directory = Path(__file__).resolve().parent
 """
 ensures the scripts can find own directory 
@@ -195,4 +195,9 @@ def visualize_suite(model, layer):
         video_path.unlink()
   visualizer.remove_hook()
 
-# TODO main to make the magic
+# main function, loads and visualizes
+if __name__ == "__main__":
+  model = load_water_model()
+  if model:
+    visualize_suite(model, 'backbone.layer4')   # maybe update funt for all layers
+    
