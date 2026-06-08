@@ -199,5 +199,13 @@ def visualize_suite(model, layer):
 if __name__ == "__main__":
   model = load_water_model()
   if model:
-    visualize_suite(model, 'backbone.layer4')   # maybe update funt for all layers
-    
+    visualize_suite(model, 'backbone.layer1')
+    visualize_suite(model, 'backbone.layer4')   # maybe update this funt. for all layers
+  if model is None:
+    # error handling
+    print("The model was not able to load, Exiting..")
+    sys.exit(1)  # break here instead of proceeding
+    plot_kernels(model, max_kernels=args.kernels)
+    run_stream(model, layer_name=args.layer, source=parse_source(args.source))
+
+# ~~~ EOF ~~~
