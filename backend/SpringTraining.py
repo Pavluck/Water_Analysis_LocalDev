@@ -29,3 +29,14 @@ Training_Images = r"\ML_Water_LocalDev\Water-Images\train"
 Training_Labels = r"\ML_Water_LocalDev\Water-Images\train\_annotations.csv"
 Test_Images = r"\ML_Water_LocalDev\Water-Images\valid"
 Test_Labels = r"\ML_Water_LocalDev\Water-Images\valid\_annotations.csv"
+
+# ~~ Global Constants ~~
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+BATCH_SIZE = 32  # increment of 16 for GPU optimization
+EPOCHS = 20
+LEARNING_RATE = 0.001
+WEIGHT_DECAY = 1e-4
+NORMALIZATION = 1.0  # gradient clipping limits max value for grads during backward propergation
+NAME = "CNNv2.5.pth" 
+BACKBONE_FREEZE = 5 # unfreeze backbone every 5 epoches
+BACKBONE_LR = 0.1  # multiplied by base LR 
