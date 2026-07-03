@@ -1,6 +1,6 @@
 """
 NP ˚✷‧ Water AI: June CNN Model Training
-New training revision with weight decay and gradient clipping to produce CNNv2.5.pth.
+New training revision with weight decay and gradient clipping
 
 Loads the training data (from Roboflow), training, then saves a CNN model to classify water potability.
 The model is a ResNet18 backbone (custom fully connected layer)
@@ -40,3 +40,18 @@ NORMALIZATION = 1.0  # gradient clipping limits max value for grads during backw
 NAME = "CNNv2.5.pth" 
 BACKBONE_FREEZE = 5 # unfreeze backbone every 5 epoches
 BACKBONE_LR = 0.1  # multiplied by base LR 
+
+class DataPrep(Dataset):
+  """
+  Takes in a Dataset, and prepares the data by mapping indices and augementation
+  """
+  def __init__(self, data, labels, transform=None):
+    """
+    Initializes the dataset of images, targets, and transformation (augmentation)
+    """
+    self.images = data
+    self.transform = transform
+    self.annotations = pd.read_csv(labels)
+    self.targets = {'potable':0, 'not_potable':1, 'clear':0, 'murky':1}
+  
+  
