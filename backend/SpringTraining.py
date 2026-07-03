@@ -53,5 +53,18 @@ class DataPrep(Dataset):
     self.transform = transform
     self.annotations = pd.read_csv(labels)
     self.targets = {'potable':0, 'not_potable':1, 'clear':0, 'murky':1}
-  
+
+  def __indexmap(self, index):
+    """
+    Obtains image with its cooresponding label
+    """
+    row = self.annotations.iloc[index]
+    image = str(row.iloc[0]).strip()
+    columnn = None
+    
+    # Check if the column exists in the DataFrame before using for label extraction
+    for col in ['class', 'label', 'potability', 'clarity']:
+      if col in self.annotations.columns:
+        column = col
+        break
   
