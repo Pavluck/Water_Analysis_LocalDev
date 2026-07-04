@@ -67,4 +67,13 @@ class DataPrep(Dataset):
       if col in self.annotations.columns:
         column = col
         break
-  
+    target = str(row[column]) if column is not None else str(row.iloc[1])
+    label = self.targets.get(target.lower(), 1) # default if no label
+    path = os.path.join(self.images, image)
+    try:
+      image = Image.open(path).convert('RGB')
+    except Exception as e:
+      print(f"Error loading {path}: {e]")
+    if self.transform is not None:
+      image = self.transform(image)
+    return image, label
