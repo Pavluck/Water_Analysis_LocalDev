@@ -77,3 +77,23 @@ class DataPrep(Dataset):
     if self.transform is not None:
       image = self.transform(image)
     return image, label
+
+class WaterCNN(nn.Module):
+  """
+  Uses Pytorch nn.Module
+  Builds ResNet18, fully connected layer for binary classification to determine
+  water potability from an image/stream
+  """
+  def __init__(self, 2):
+    """
+    Initializes the backbone and number of features
+    """
+    super().__init__() # get Pytorch's constructor
+    self.backbone = models.resnet18(pretrain=True)
+    features = self.backbone.fc.in_features  # 2
+    self.backbone.fc = nn.Sequential(
+      nn.Linear(features, 256), nn.ReLu(),
+      nn.Dropout(0.5), nn.Linear(256, 2) # nnLinear called twice for forward and backward pass
+    )
+    
+  
