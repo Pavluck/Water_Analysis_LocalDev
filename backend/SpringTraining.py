@@ -1,6 +1,6 @@
 """
 NP ˚✷‧ Water AI: June CNN Model Training
-New training revision with weight decay and gradient clipping
+Training ResNet with weight decay and gradient clipping
 
 Loads the training data (from Roboflow), training, then saves a CNN model to classify water potability.
 The model is a ResNet18 backbone (custom fully connected layer)
@@ -40,6 +40,18 @@ NORMALIZATION = 1.0  # gradient clipping limits max value for grads during backw
 NAME = "CNNv2.5.pth" 
 BACKBONE_FREEZE = 5 # unfreeze backbone every 5 epoches
 BACKBONE_LR = 0.1  # multiplied by base LR 
+
+"""
+Augment the data by resizing, flipping, rotation, jittering, and normalization
+"""
+training = tranforms.Compose([
+  transforms.Resize((224, 224)),
+  transforms.RandomHoriontalFlip(0.5),
+  transforms.RandomRotation(10),
+  transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
+  transforms.ToTensor(),
+  transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]) # chosen mean/std from Pytorch to support training convergence
+])
 
 class DataPrep(Dataset):
   """
@@ -94,6 +106,4 @@ class WaterCNN(nn.Module):
     self.backbone.fc = nn.Sequential(
       nn.Linear(features, 256), nn.ReLu(),
       nn.Dropout(0.5), nn.Linear(256, 2) # nnLinear called twice for forward and backward pass
-    )
-    
-  
+    )  
