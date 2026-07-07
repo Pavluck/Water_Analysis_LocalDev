@@ -53,6 +53,15 @@ training = tranforms.Compose([
   transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]) # chosen mean/std from Pytorch to support training convergence
 ])
 
+targets = transforms.Compose([
+  transforms.Resize((224, 224)), transforms.ToTensor(),
+  transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+]) 
+
+#~~~ Global Functions ~~~
+# Training
+# Validation
+
 class DataPrep(Dataset):
   """
   Takes in a Dataset, and prepares the data by mapping indices and augementation
