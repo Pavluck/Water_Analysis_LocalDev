@@ -7,7 +7,6 @@ The model is a ResNet18 backbone (custom fully connected layer)
 Includes data augmentation for training and a learning rate scheduler for better convergence.
 + evaluation on the validation set and saves misclassified images for analysis.
 
-
 References: 
 https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html
 https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
@@ -85,6 +84,27 @@ def train_epoch(model, loader, criterion, optimizer, device, clip_norm=None):
     return total_loss / len(loader), 100.0 * correct / total
 
 # Validation
+def test_epoch(model, loader, criterion, device):
+  """
+  Takes in a model from WaterCNN along with the DataLoader to tailor a dataset.
+  After testing, it checks the targets and returns the average loss and accuracy
+  """
+  model.eval()
+  total_loss = 0.0
+  correct = 0
+  total = 0
+  with torch.no_grad():
+    # not updating the parameters, so no gradient computation is needed
+    for images, labels in loader:
+      data = images.to(device)
+      targets = labels.to(device)
+      outputs = model(data)
+      loss = criterion(outputs, targets)
+      total_loss += loss.item()
+      predicted = outputs.max(1)[1]  # only need the target labels
+      total += targets.size(0)
+      correct += (predicted == targets).sum().item()
+  return total_loss / len(loader), 100.0*(correct/total)
 
 class DataPrep(Dataset):
   """
