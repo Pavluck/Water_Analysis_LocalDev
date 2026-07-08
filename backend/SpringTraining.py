@@ -60,6 +60,30 @@ targets = transforms.Compose([
 
 #~~~ Global Functions ~~~
 # Training
+def train_epoch(model, loader, criterion, optimizer, device, clip_norm=None):
+  """
+  Loads the dataset and trains for a single epoch using the WaterCNN & Dataprep class functions
+  """
+    model.train()
+    total_loss = 0.0
+    correct = 0
+    total = 0
+    for images, labels in loader:
+        images = images.to(device)
+        labels = labels.to(device)
+        optimizer.zero_grad()
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        if clip_norm is not None and clip_norm > 0:
+            nn.utils.clip_grad_norm_(model.parameters(), clip_norm)
+        optimizer.step()
+        total_loss += loss.item()
+        _, predicted = outputs.max(1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+    return total_loss / len(loader), 100.0 * correct / total
+
 # Validation
 
 class DataPrep(Dataset):
