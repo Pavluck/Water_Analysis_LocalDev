@@ -160,3 +160,12 @@ class WaterCNN(nn.Module):
       nn.Linear(features, 256), nn.ReLu(),
       nn.Dropout(0.5), nn.Linear(256, 2) # nnLinear called twice for forward and backward pass
     )  
+
+  def propagation(self, tensor):
+    """
+    Given the input tensor, passes it through our ResNet backbone made with the
+    classification head from the init. 
+    Returns the output tensor, which prediction potability of the water from the input.
+    """
+    prediction = self.backbone(tensor)
+    return prediction
