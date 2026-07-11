@@ -169,3 +169,21 @@ class WaterCNN(nn.Module):
     """
     prediction = self.backbone(tensor)
     return prediction
+
+# ~~~ Main Function ~~~
+def main():
+  """
+  Goals: Train ResNet CNN version 2.5: Similar to 2.4, with weight decay, grad. clips
+  """
+  # Load & Prepare Data
+  # Use Dataprep class
+  # Backbone freezing
+  # Use Adam and StepLR
+  # Benchmark performance & Save history into JSON 
+
+if __name__ == '__main__':
+  """
+  Program entry point for training and execution.
+  """
+  main()
+  
