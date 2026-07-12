@@ -173,10 +173,13 @@ class WaterCNN(nn.Module):
 # ~~~ Main Function ~~~
 def main():
   """
-  Goals: Train ResNet CNN version 2.5: Similar to 2.4, with weight decay, grad. clips
+  Train ResNet CNN version 2.5: Similar to 2.4, with weight decay & grad. clips
   """
   # Load & Prepare Data
-  # Use Dataprep class
+  training_data =   DataPrep(Training_Images, Training_Labels, transform=train_transforms)
+  test_data =       DataPrep(Test_Images, Test_Labels, transform=val_transforms)
+  training_loader = DataLoader(training_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
+  test_loader =     DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=False, num_workers=0)
   # Backbone freezing
   # Use Adam and StepLR
   # Benchmark performance & Save history into JSON 
