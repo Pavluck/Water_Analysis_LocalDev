@@ -181,7 +181,16 @@ def main():
   training_loader = DataLoader(training_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
   test_loader =     DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=False, num_workers=0)
   # Backbone freezing
-  # Use Adam and StepLR
+  model = WaterCNN(num_classes=2).to(DEVICE)
+  criterion = nn.CrossEntropyLoss()
+  if BACKBONE_FREEZE > 0:
+    # want to leverage the pre-trained features of the backbone while focusing on training the new head for our specific task.
+    for name, param in model.named_parameters()
+      # The backbone parameters are identified by their names, which start with 'backbone' but do not include 'backbone.fc', as we want to keep the final fully connected layer trainable
+      if name.startswith('backbone') and not name.startswith('backbone.fc'):
+        param.requires_grad = False # https://docs.pytorch.org/docs/2.13/generated/torch.Tensor.requires_grad_.html
+        
+  # Adam and StepLR
   # Benchmark performance & Save history into JSON 
 
 if __name__ == '__main__':
