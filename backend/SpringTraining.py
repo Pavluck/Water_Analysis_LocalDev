@@ -188,9 +188,19 @@ def main():
     for name, param in model.named_parameters()
       # The backbone parameters are identified by their names, which start with 'backbone' but do not include 'backbone.fc', as we want to keep the final fully connected layer trainable
       if name.startswith('backbone') and not name.startswith('backbone.fc'):
-        param.requires_grad = False # https://docs.pytorch.org/docs/2.13/generated/torch.Tensor.requires_grad_.html
-        
+        param.requires_grad = False 
+        # https://docs.pytorch.org/docs/2.13/generated/torch.Tensor.requires_grad_.html
+  backbone_params = [p for n, p in model.named_parameters() if n.startswith('backbone') and not n.startswith('backbone.fc')]
+  head_params = [p for n, p in model.named_parameters() if not (n.startswith('backbone') and not n.startswith('backbone.fc'))]
   # Adam and StepLR
+  optimizer = optim.Adam([
+        {'params': backbone_params, 'lr': BASE_LR * BACKBONE_LR_FACTOR, 'weight_decay': WEIGHT_DECAY},
+        {'params': head_params, 'lr': BASE_LR, 'weight_decay': WEIGHT_DECAY}
+    ])
+  # StepLR is a learning rate scheduler that reduces the learning rate by a factor of gamma every step_size epochs
+  scheduler = optim.lr_scheduler.StepLR(optimzer, step_size=10, gamma = 0.1)
+  # https://docs.pytorch.org/docs/2.13/generated/torch.optim.lr_scheduler.StepLR.html
+
   # Benchmark performance & Save history into JSON 
 
 if __name__ == '__main__':
