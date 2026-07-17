@@ -206,7 +206,7 @@ def main():
   loss, accuracy = train_epoch(model, training_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
   # testing  
   test_loss, test_accuracy = validate(model, test_loader, criterion, DEVICE)
-  history[
+  history['training_misses':[], 'training_hits':[], 'test_misses':[], 'test_hits':[]}
 
 if __name__ == '__main__':
   """
