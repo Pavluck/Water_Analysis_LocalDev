@@ -212,6 +212,14 @@ def main():
       # Unfreeze when finetuning the Res Network
       for parameter in model.parameters():
         param.requires_grad = True
+      backbone_params = [value for name, value in model.named_parameters() if name.startswith('backbone' and not name.startswith('backbone.fc')]
+      # exclude the final layer (fc)
+      head_params = backbone_params # copy and seperate the classification head
+      optimizer = optim.Adam([
+        {'parameter': backbone_params, 'lr': LEARNING_RATE * BACKBONE_LR, 'weight_decay': WEIGHT_DECAY}, 
+        {'parameter': head_params, 'lr': LEARNING_RATE, 'weight_decay': WEIGHT_DECAY}
+      ])
+      scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
 
 
 if __name__ == '__main__':
