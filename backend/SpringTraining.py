@@ -202,11 +202,17 @@ def main():
   # https://docs.pytorch.org/docs/2.13/generated/torch.optim.lr_scheduler.StepLR.html
   history = {'train_misses':[], 'training_accuracy':[], 'test_misses':[], 'test_accuracy':[]}
   # Benchmark performance & Save history into JSON 
-  # training
+  # training setup
   loss, accuracy = train_epoch(model, training_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
-  # testing  
   test_loss, test_accuracy = validate(model, test_loader, criterion, DEVICE)
   history['training_misses':[], 'training_hits':[], 'test_misses':[], 'test_hits':[]}
+  # train loop
+  for epoch in range(EPOCHS):
+    if epoch == BACKBONE_FREEZE:
+      # Unfreeze when finetuning the Res Network
+      for parameter in model.parameters():
+        param.requires_grad = True
+
 
 if __name__ == '__main__':
   """
