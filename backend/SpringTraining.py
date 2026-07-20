@@ -220,6 +220,9 @@ def main():
         {'parameter': head_params, 'lr': LEARNING_RATE, 'weight_decay': WEIGHT_DECAY}
       ])
       scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
+    training_misses, training_hits = train_epoch(model, train_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
+    test_misses, test_hits = validate(model, test_loader, criterion, DEVICE)
+
 
 
 if __name__ == '__main__':
