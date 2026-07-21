@@ -200,7 +200,7 @@ def main():
   # StepLR is a learning rate scheduler that reduces the learning rate by a factor of gamma every step_size epochs
   scheduler = optim.lr_scheduler.StepLR(optimzer, step_size=10, gamma = 0.1)
   # https://docs.pytorch.org/docs/2.13/generated/torch.optim.lr_scheduler.StepLR.html
-  history = {'train_misses':[], 'training_accuracy':[], 'test_misses':[], 'test_accuracy':[]}
+  history = {'training_losses':[],'train_misses':[], 'training_accuracy':[], 'test_misses':[], 'test_accuracy':[]}
   # Benchmark performance & Save history into JSON 
   # training setup
   loss, accuracy = train_epoch(model, training_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
@@ -220,8 +220,16 @@ def main():
         {'parameter': head_params, 'lr': LEARNING_RATE, 'weight_decay': WEIGHT_DECAY}
       ])
       scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
-    training_misses, training_hits = train_epoch(model, train_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
-    test_misses, test_hits = validate(model, test_loader, criterion, DEVICE)
+    training_miss, training_hit = train_epoch(model, train_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
+    test_miss, test_hit = validate(model, test_loader, criterion, DEVICE)
+    history['training_losses'].append(loss)
+    history['training_accuracy'].append(accuracy)
+    history['training_misses'].append(100.0- accuracy)
+    history['test_misses'].append(test_miss)
+    history['test_hits'].append(test_hit)
+    scheduler.step()
+    print(f"Epoch {epoch+1}/{EPOCHS}: training loss = {test_misses:.4f}, training accuracy ={training_accuracy:.2f}%, validation loss={test_misses:.4f}, validation accuracy = {test_hits:.2f}%")
+
 
 
 
