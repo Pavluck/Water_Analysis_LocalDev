@@ -201,7 +201,6 @@ def main():
   scheduler = optim.lr_scheduler.StepLR(optimzer, step_size=10, gamma = 0.1)
   # https://docs.pytorch.org/docs/2.13/generated/torch.optim.lr_scheduler.StepLR.html
   history = {'training_losses':[],'train_misses':[], 'training_accuracy':[], 'test_misses':[], 'test_accuracy':[]}
-  # Benchmark performance & Save history into JSON 
   # training setup
   loss, accuracy = train_epoch(model, training_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
   test_loss, test_accuracy = validate(model, test_loader, criterion, DEVICE)
@@ -220,6 +219,7 @@ def main():
         {'parameter': head_params, 'lr': LEARNING_RATE, 'weight_decay': WEIGHT_DECAY}
       ])
       scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
+    # Benchmark performance 
     training_miss, training_hit = train_epoch(model, train_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
     test_miss, test_hit = validate(model, test_loader, criterion, DEVICE)
     history['training_losses'].append(loss)
@@ -229,8 +229,10 @@ def main():
     history['test_hits'].append(test_hit)
     scheduler.step()
     print(f"Epoch {epoch+1}/{EPOCHS}: training loss = {test_misses:.4f}, training accuracy ={training_accuracy:.2f}%, validation loss={test_misses:.4f}, validation accuracy = {test_hits:.2f}%")
-
-
+    # Save History & Model
+    torch.save(model.state_dict(), NAME)
+    with open(os.path.splittext(NAME)[0] + 'history.json', 'w') as f:
+      json.dump(history, f)
 
 
 if __name__ == '__main__':
@@ -238,4 +240,5 @@ if __name__ == '__main__':
   Program entry point for training and execution.
   """
   main()
-  
+
+# ~~~~~~ EOF ~~~~~~~~
