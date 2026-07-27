@@ -46,6 +46,50 @@ The code will display the data like so:
 
 The class names, aka, our labels are annotated in Indonesian. Keruh is a word for murky and bening is for clear. We will clean up the data from the test, train, and validate folders to be mapped to potable and non-potable (respectively).
 
+```
+# ~~~ Imports ~~~
+import pandas as pd
+import os
+"""
+data-cleanup:
+maps classes into English
+bening -> potable,  keruh -> non-potable
+"""
+
+Translate = {
+    "bening": "potable",
+    "keruh": "non-potable"
+}
+
+Subfolders = ["train", "test", "valid"]
+DataFolder = "WaterData"
+
+for folder in Subfolders:
+    csv_path = os.path.join(DataFolder, folder, "_annotations.csv")
+
+    if os.path.exists(csv_path):
+        # Read annotation CSV
+        df = pd.read_csv(csv_path)
+
+        # Replace class names using the map
+        df["class"] = df["class"].map(Translate).fillna(df["class"])
+
+        # Overwrite CSV with updated English labels
+        df.to_csv(csv_path, index=False)
+        print(f"Successfully mapped labels in: {csv_path}")
+    else:
+        # sanity check/debugging
+        print(f"File not found: {csv_path}")
+```
+
+There's some error handling for the directories and subdirectores, once the code runs smoothly, the targets will be translated:
+<img width="680" height="336" alt="image" src="https://github.com/user-attachments/assets/0cdabf59-437c-44ac-8271-ecd26ac2555d" />
+
+We can verify the targets were updated by printing the head of the dataframe again:
+<img width="640" height="400" alt="image" src="https://github.com/user-attachments/assets/dd572590-7ab9-4d42-a051-19618aab29e8" />
+
+The labels can be in different formats (e.g., 'potable', 'not_potable', 'clear', 'murky'), and they will be mapped to integer indices using a predefined mapping. This also supports optional transformations for data augmentation.
+
 ## References:
 @misc{ water-quality-prediction_dataset,
   title = { Water-Quality-Prediction Dataset },
