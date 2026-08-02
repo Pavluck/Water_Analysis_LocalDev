@@ -52,3 +52,67 @@ if __name__ == '__main__':
 Loading the data into the class function behaves as expected:
 
 <img width="1144" height="622" alt="image" src="https://github.com/user-attachments/assets/1c226562-780f-4526-84f4-3743e8d49977" />
+
+## Label Extractions 
+After initialization, we can create helper functions in the preparation class to return the number of samples in the dataset, obtain the image and label for a given index, apply defined transformations, and return the processed image with its corresponding label.
+
+ The helper checks if the column exists in the DataFrame and use it for label extraction. The class defaults data to non-potable (0) if label not found, with some built in cleaning; converts to lowercase for consistency (with matching)
+
+```
+# ~~~~~ imports & dependencies ~~~~~~~
+from torch.utils.data import Dataset, DataLoader
+
+# ~~ Load Data ~~
+TrainingData = "WaterData/train"
+TrainingTargets = "WaterData/train/_annotations.csv"
+TestData = "WaterData/test"
+TestTargets = "WaterData/test/_annotations.csv"
+
+class DataPrep(Dataset):
+    """
+    Takes in a Dataset, and prepares the data for training and testing by mapping indices and augmentation
+    """
+    def __init__(self, data, labels, transform=None):
+        """
+        Initialize the dataset with the directory of images (the CSV file with annotations), parameters (to note transformations for data augmentation).
+        """
+        self.images = data
+        self.transform = transform
+        self.annotations = pd.read_csv(labels)
+        self.targets = {'potable': 1, 'non-potable': 0, 'clear': 1, 'murky': 0}
+        print(f"Loaded {len(self.annotations)} samples from {data}")
+        print(f"Columns: {self.annotations.columns.tolist()}")
+
+    def __len__(self):
+        """
+        Returns the number of samples in the dataset.
+        """
+        return len(self.annotations)
+
+    def __getitem__(self, idx):
+        """
+        Obtains the image and label for a given index
+        """
+        row = self.annotations.iloc[idx]
+        image = str(row.iloc[0]).strip()
+        column = None
+        for col in ['class', 'label', 'potability', 'clarity']:
+
+            if col in self.annotations.columns:
+                column = col
+                break
+        target = str(row[column]) if column is not None else str(row.iloc[1])
+        label = self.targets.get(target.lower(), 0)
+        path = os.path.join(self.images, image)
+        try:
+            image = Image.open(path).convert('RGB')
+        except Exception as e:
+            print(f"Error loading {path}: {e}")
+            exit(1)
+        if self.transform is not None:
+            image = self.transform(image)
+        return image, label
+
+    def get_filename(self, idx):
+        return str(self.annotations.iloc[idx].iloc[0]).strip()
+```
