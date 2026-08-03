@@ -116,3 +116,68 @@ class DataPrep(Dataset):
     def get_filename(self, idx):
         return str(self.annotations.iloc[idx].iloc[0]).strip()
 ```
+
+We can improve this by creating a safeguard when image loading fails. If there exists an image that crashes, doesn't load, or is corrupted, it would interrupt the training process.
+
+Instead, we create a neutral gray image of the same size (for ours, it is 224x224 pixels) to maintain consistency in input dimensions.
+This allows the training to continue while logging the error for later investigation.
+Can't we just skip the image? Yes, but skipping images can lead to an imbalance in the dataset and may affect the training process.
+By using a placeholder, we ensure that the model still receives input of the expected size and format, which can help maintain stability during training.
+
+Alternatively, a break could be applied. Breaking the loop would stop the training process. By the placeholder, it will then log the error and continue training with the remaining images. This way, we can still utilize the majority of the dataset while being aware of any issues with specific images.
+
+The placeholder image needs to be neutral, so it will be (224, 224), (128, 128, 128), a grey image marked as non-potable.
+
+```
+# ~~~~~ imports & dependencies ~~~~~~~
+from torch.utils.data import Dataset
+
+# ~~ Load Data ~~
+TrainingData = "WaterData/train"
+TrainingTargets = "WaterData/train/_annotations.csv"
+TestData = "WaterData/test"
+TestTargets = "WaterData/test/_annotations.csv"
+
+class DataPrep(Dataset):
+    """
+    Takes in a Dataset, and prepares the data for training and testing by mapping indices and augmentation
+    """
+    def __init__(self, data, labels, transform=None):
+        """
+        Initialize the dataset with the directory of images, the CSV file with annotations, and parameters to note transformations for data augmentation.
+        """
+        self.images = data
+        self.transform = transform
+        self.annotations = pd.read_csv(labels)
+        self.targets = {'potable': 1, 'non-potable': 0, 'clear': 1, 'murky': 0}
+        print(f"Loaded {len(self.annotations)} samples from {data}")
+        print(f"Columns: {self.annotations.columns.tolist()}")
+
+
+    def __getitem__(self, idx):
+        """
+        Obtains the image and label for a given index, applies transformations if specified, and returns the processed image with  label.
+        If the image cannot be loaded, a placeholder image is returned instead.
+        """
+        row = self.annotations.iloc[idx]
+        image = str(row.iloc[0]).strip()
+        column = None
+        for col in ['class', 'label', 'potability', 'clarity']:
+            # Check if the column exists in the DataFrame and use it for label extraction
+            if col in self.annotations.columns:
+                column = col
+                break
+        target = str(row[column]) if column is not None else str(row.iloc[1])
+        label = self.targets.get(target.lower(), 0)
+        # default to non potable (0) if label not found, and convert to lowercase for case-insensitive matching
+        path = os.path.join(self.images, image)
+        try:
+            image = Image.open(path).convert('RGB')
+        except Exception as e:
+            print(f"Error loading {path}: {e}")
+            image = Image.new('RGB', (224, 224), (128, 128, 128))
+        if self.transform is not None:
+            image = self.transform(image)
+        return image, label
+
+```
