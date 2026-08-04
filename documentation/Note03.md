@@ -181,3 +181,35 @@ class DataPrep(Dataset):
         return image, label
 
 ```
+
+Now that the data is ready, it can be augmented using torchvision's modules.
+This definition will compose a series of transformations to be applied to the training images.
+These transformations include resizing, random horizontal flipping, random rotation, color jittering, conversion to tensor, and normalization.
+The purpose of these transformations is to augment the training data and improve the model's generalization ability.
+
+The normalization range (line 10) was selected because it is the standard normalization range for pre-trained models in PyTorch, which are typically trained on the ImageNet dataset.
+The mean and standard deviation values are calculated from the ImageNet dataset and are used to normalize the input images to have similar statistical properties as the images seen during pre-training.
+
+We can use a similar technique for our set of test images.
+
+This helps improve the model's performance and convergence during training.
+
+```
+from torchvision import transforms
+
+train_transforms = transforms.Compose([
+
+    transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(0.5),
+    transforms.RandomRotation(10),
+    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+test_transforms = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+```
