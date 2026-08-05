@@ -28,6 +28,13 @@ class WaterCNN(nn.Module):
     """
     Takes in a pretrained ImageNet model from torchvision (as a template) and prepares the data for training and testing
     """
+
+    def __init__(self, num_classes=2):
+        """
+        2 class, which represent the different decisions (potable water and non-potable water)
+        """
+        # Call the constructor of the parent class nn.Module to initialize the model and its parameters.
+        super().__init__()
 ```
 
 ## References:
