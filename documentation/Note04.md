@@ -13,3 +13,15 @@ Of course, this means that the ResNet does not focus well on isolated spectrum's
 Below is an example comparing the performance of a CNN model with a ResNet model. The graph below tests the models using an animal classification dataset.
 <img width="909" height="487" alt="image" src="https://github.com/user-attachments/assets/6c31bfd5-0db0-4680-b97c-03ab79482775" />
 [Reference: https://medium.com/@leonardofonseca.r/a-practical-comparison-between-cnn-and-resnet-architectures-a-focus-on-attention-mechanisms-cee7ec8eca55]
+
+## Starting the Model
+In this case, we are using ResNet18 as the backbone for our water potability classification model. 
+The final fully connected layer is replaced with a custom head for binary classification (potable vs. non-potable). 
+The model is initialized with pre-trained weights from ImageNet, and the final layer is modified to output the desired number of classes, 2 for binary classification
+
+Note that the parameter, nn.Module, is a base class for all neural network modules in PyTorch. 
+It provides a way to define and manage layers, parameters, and forward passes in a structured manner. 
+By subclassing nn.Module, we can create custom models with specific architectures and behaviors.
+
+## References:
+[1] [Reference: https://medium.com/@leonardofonseca.r/a-practical-comparison-between-cnn-and-resnet-architectures-a-focus-on-attention-mechanisms-cee7ec8eca55]
