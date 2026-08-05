@@ -23,5 +23,12 @@ Note that the parameter, nn.Module, is a base class for all neural network modul
 It provides a way to define and manage layers, parameters, and forward passes in a structured manner. 
 By subclassing nn.Module, we can create custom models with specific architectures and behaviors.
 
+```
+class WaterCNN(nn.Module):
+    """
+    Takes in a pretrained ImageNet model from torchvision (as a template) and prepares the data for training and testing
+    """
+```
+
 ## References:
 [1] [Reference: https://medium.com/@leonardofonseca.r/a-practical-comparison-between-cnn-and-resnet-architectures-a-focus-on-attention-mechanisms-cee7ec8eca55]
