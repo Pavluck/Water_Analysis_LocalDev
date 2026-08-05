@@ -35,6 +35,12 @@ class WaterCNN(nn.Module):
         """
         # Call the constructor of the parent class nn.Module to initialize the model and its parameters.
         super().__init__()
+
+    def forward(self, tensor):
+        """
+        Pass input tensor through the ResNet backbone which returns a prediction.
+        """
+        return self.backbone(tensor)
 ```
 
 ## References:
