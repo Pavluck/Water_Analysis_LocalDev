@@ -47,7 +47,9 @@ The class initializes the model with a ResNet18 backbone and a classification he
 The final layer is fully connected, which gets replaced with a new head consisting of a linear layer, ReLU activation, dropout for regularization, and another linear layer to output the desired number of classes.
 
 We can set up the backbone and prepares the model for training to identify characteristics of potable water.
+This can be done by extracting the number of input features for the final fully connected layer of the ResNet18 backbone.
 
+Then the defined new classification head will replace the original template, and be a fully connected layer
 
 ## References:
 [1] [Reference: https://medium.com/@leonardofonseca.r/a-practical-comparison-between-cnn-and-resnet-architectures-a-focus-on-attention-mechanisms-cee7ec8eca55]
