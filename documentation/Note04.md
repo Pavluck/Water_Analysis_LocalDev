@@ -51,5 +51,18 @@ This can be done by extracting the number of input features for the final fully 
 
 Then the defined new classification head will replace the original template, and be a fully connected layer
 
+```
+import torch.nn as nn
+
+class WaterCNN(nn.Module):
+    """
+    Takes in a pretrained ImageNet model from torchvision (as a template) and prepares the data for training and testing
+    """
+    def __init__(self, num_classes=2):
+        super().__init__()
+        self.backbone = models.resnet18(pretrained=True)
+        num_features = self.backbone.fc.in_features
+```
+
 ## References:
 [1] [Reference: https://medium.com/@leonardofonseca.r/a-practical-comparison-between-cnn-and-resnet-architectures-a-focus-on-attention-mechanisms-cee7ec8eca55]
