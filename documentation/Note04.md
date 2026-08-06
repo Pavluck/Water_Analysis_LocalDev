@@ -46,5 +46,8 @@ class WaterCNN(nn.Module):
 The class initializes the model with a ResNet18 backbone and a classification head for binary classification with that init function.
 The final layer is fully connected, which gets replaced with a new head consisting of a linear layer, ReLU activation, dropout for regularization, and another linear layer to output the desired number of classes.
 
+We can set up the backbone and prepares the model for training to identify characteristics of potable water.
+
+
 ## References:
 [1] [Reference: https://medium.com/@leonardofonseca.r/a-practical-comparison-between-cnn-and-resnet-architectures-a-focus-on-attention-mechanisms-cee7ec8eca55]
