@@ -43,6 +43,7 @@ class WaterCNN(nn.Module):
         return self.backbone(tensor)
 ```
 
+## Model Architecture 
 The class initializes the model with a ResNet18 backbone and a classification head for binary classification with that init function.
 The final layer is fully connected, which gets replaced with a new head consisting of a linear layer, ReLU activation, dropout for regularization, and another linear layer to output the desired number of classes.
 
@@ -63,6 +64,10 @@ class WaterCNN(nn.Module):
         self.backbone = models.resnet18(pretrained=True)
         num_features = self.backbone.fc.in_features
 ```
+
+## Building a better backbone
+nn.Linear can be called twice in the classification head: first to reduce the feature dimension from num_features to 256, and then to map the 256 features to the desired number of output classes (num_classes). The first nn.Linear layer learns a transformation of the features extracted by the backbone, while the second nn.Linear layer produces the final class scores for classification.
+
 
 ## References:
 [1] [Reference: https://medium.com/@leonardofonseca.r/a-practical-comparison-between-cnn-and-resnet-architectures-a-focus-on-attention-mechanisms-cee7ec8eca55]
