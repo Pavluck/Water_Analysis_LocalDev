@@ -59,6 +59,7 @@ class WaterCNN(nn.Module):
     """
     Takes in a pretrained ImageNet model from torchvision (as a template) and prepares the data for training and testing
     """
+
     def __init__(self, num_classes=2):
         super().__init__()
         self.backbone = models.resnet18(pretrained=True)
@@ -67,6 +68,21 @@ class WaterCNN(nn.Module):
 
 ## Building a better backbone
 nn.Linear can be called twice in the classification head: first to reduce the feature dimension from num_features to 256, and then to map the 256 features to the desired number of output classes (num_classes). The first nn.Linear layer learns a transformation of the features extracted by the backbone, while the second nn.Linear layer produces the final class scores for classification.
+
+```
+import torch.nn as nn
+
+class WaterCNN(nn.Module):
+    """
+    Set up the base model to prepare it for training and eventually, testing.
+    Receives the pretrained ImageNet model from torchvision to copy into a unique instance
+    """
+    def __init__(self, num_classes=2):
+        """
+        Initializes the WaterCNN model with a ResNet18 backbone.
+        """
+        super().__init__() # Call the constructor of the parent class nn.Module for initialization
+```
 
 
 ## References:
