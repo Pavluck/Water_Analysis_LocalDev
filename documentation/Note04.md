@@ -84,7 +84,12 @@ class WaterCNN(nn.Module):
         super().__init__() # Call the constructor of the parent class nn.Module for initialization
         self.backbone = models.resnet18(pretrained=True)
         num_features = self.backbone.fc.in_features # input features for the ResN backbone
-
+        self.backbone.fc = nn.Sequential(
+            nn.Linear(num_features, 256),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(256, num_classes)
+        )
 ```
 
 
