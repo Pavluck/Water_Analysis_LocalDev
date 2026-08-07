@@ -82,6 +82,8 @@ class WaterCNN(nn.Module):
         Initializes the WaterCNN model with a ResNet18 backbone.
         """
         super().__init__() # Call the constructor of the parent class nn.Module for initialization
+        self.backbone = models.resnet18(pretrained=True)
+
 ```
 
 
