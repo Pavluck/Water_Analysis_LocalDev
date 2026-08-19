@@ -8,8 +8,11 @@ An epoch is defined as a single cycle where every sample in the training dataset
 
 The Learning rate is normally a decimal to represent a percentage. The standard initial learning rate for training a ResNet model from scratch on large datasets is 0.1. Since our Resnet comes pretrained from the Pytorch template, the learning rate will be a fraction of that to avoid destroying learned features. 
 
-"""
+```
 # ~~ Training Setup ~~
 EPOCHS = 20
 LEARNING_RATE = 0.001
-"""
+```
+
+## Training Parameters
+Weight decay for regularization is added to the optimizer and set to 1e-4 to help prevent overfitting and improve generalization. 1e-4 is a common default for many models.
