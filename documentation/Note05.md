@@ -16,3 +16,5 @@ LEARNING_RATE = 0.001
 
 ## Training Parameters
 Weight decay for regularization is added to the optimizer and set to 1e-4 to help prevent overfitting and improve generalization. 1e-4 is a common default for many models.
+
+In addition, gradient clipping can be applied. It is a technique to limit the maximum value of gradients during backpropagation, which helps stabilize training. To prevent exploding gradients during training, a value of 1.0 will be set.
