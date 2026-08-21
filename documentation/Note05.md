@@ -25,3 +25,6 @@ In addition, gradient clipping can be applied. It is a technique to limit the ma
 WEIGHT_DECAY = 1e-4
 NORMALIZATION = 1.0 
 ```
+
+### Backbone Optimization
+We can leverage the learned features from the pre-trained model while focusing on training the new classification head by a technique called freezing the backbone. After the specified number of epochs, the backbone is unfrozen to allow fine-tuning of the entire model for better performance on the new task.
