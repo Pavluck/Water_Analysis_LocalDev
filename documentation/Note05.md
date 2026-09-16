@@ -28,3 +28,13 @@ NORMALIZATION = 1.0
 
 ### Backbone Optimization
 We can leverage the learned features from the pre-trained model while focusing on training the new classification head by a technique called freezing the backbone. After the specified number of epochs, the backbone is unfrozen to allow fine-tuning of the entire model for better performance on the new task.
+
+By setting the number of epochs to freeze the backbone during training allows the model to learn the new classification head before fine-tuning the backbone. After this many epochs, the backbone will be unfrozen and trained along with the head. backbone freezing is a common technique in transfer learning, where a pre-trained model is used as a starting point for a new task.
+
+```
+# ~~ Training Setup ~~
+NAME = "CNNv2.5.pth"
+WEIGHT_DECAY = 1e-4
+NORMALIZATION = 1.0
+BACKBONE_FREEZE = 5    # <~ freeze every 5 epochs
+```
