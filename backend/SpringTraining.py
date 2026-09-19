@@ -43,7 +43,7 @@ BACKBONE_LR = 0.1  # multiplied by base LR
 """
 Augment the data by resizing, flipping, rotation, jittering, and normalization
 """
-training = tranforms.Compose([
+training = transforms.Compose([
   transforms.Resize((224, 224)),
   transforms.RandomHoriontalFlip(0.5),
   transforms.RandomRotation(10),
@@ -149,7 +149,7 @@ class WaterCNN(nn.Module):
   Builds ResNet18, fully connected layer for binary classification to determine
   water potability from an image/stream
   """
-  def __init__(self, 2):
+  def __init__(self, num_classes=2):
     """
     Initializes the backbone and number of features
     """
@@ -185,7 +185,7 @@ def main():
   criterion = nn.CrossEntropyLoss()
   if BACKBONE_FREEZE > 0:
     # want to leverage the pre-trained features of the backbone while focusing on training the new head for our specific task.
-    for name, param in model.named_parameters()
+    for name, param in model.named_parameters():
       # The backbone parameters are identified by their names, which start with 'backbone' but do not include 'backbone.fc', as we want to keep the final fully connected layer trainable
       if name.startswith('backbone') and not name.startswith('backbone.fc'):
         param.requires_grad = False 
@@ -194,8 +194,8 @@ def main():
   head_params = [p for n, p in model.named_parameters() if not (n.startswith('backbone') and not n.startswith('backbone.fc'))]
   # Adam and StepLR
   optimizer = optim.Adam([
-        {'params': backbone_params, 'lr': BASE_LR * BACKBONE_LR_FACTOR, 'weight_decay': WEIGHT_DECAY},
-        {'params': head_params, 'lr': BASE_LR, 'weight_decay': WEIGHT_DECAY}
+        {'params': backbone_params, 'lr': LEARNING_RATE * BACKBONE_LR, 'weight_decay': WEIGHT_DECAY},
+        {'params': head_params, 'lr': LEARNING_RATE, 'weight_decay': WEIGHT_DECAY}
   ])
   # StepLR is a learning rate scheduler that reduces the learning rate by a factor of gamma every step_size epochs
   scheduler = optim.lr_scheduler.StepLR(optimzer, step_size=10, gamma = 0.1)
@@ -231,7 +231,7 @@ def main():
     print(f"Epoch {epoch+1}/{EPOCHS}: training loss = {test_misses:.4f}, training accuracy ={training_accuracy:.2f}%, validation loss={test_misses:.4f}, validation accuracy = {test_hits:.2f}%")
     # Save History & Model
     torch.save(model.state_dict(), NAME)
-    with open(os.path.splittext(NAME)[0] + 'history.json', 'w') as f:
+    with open(os.path.splitext(NAME)[0] + 'history.json', 'w') as f:
       json.dump(history, f)
 
 
