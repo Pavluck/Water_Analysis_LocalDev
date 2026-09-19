@@ -38,3 +38,9 @@ WEIGHT_DECAY = 1e-4
 NORMALIZATION = 1.0
 BACKBONE_FREEZE = 5    # <~ freeze every 5 epochs
 ```
+
+The backbone is less sensitive to learning rate changes than the head, so we apply a lower learning rate to the backbone during training. This factor is multiplied by the base learning rate to set the learning rate for the backbone parameters.
+
+```
+BACKBONE_LR = 0.1
+```
