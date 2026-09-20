@@ -163,6 +163,19 @@ def parse_source(source: str):
   except ValueError:
     return source
 
+def confusion_matrix(model_name, desired_image_name):
+  """
+  Given the model's filepath as a .json, returns the confusion matrix as a png
+  """
+  # sanity check
+  if os.path.exists(model_name):
+    print(f"Model loaded, getting data from {model_name}")
+    with open(model_name, 'r') as file:
+      history = json.load(file)
+  else:
+    print(f"Oopsie Daisy~ Model logs from {model_name} were not found")
+    return
+  
 # Helper to automate visuals for multiple inputs 
 def visualize_suite(model, layer):
   """
