@@ -52,3 +52,11 @@ The torch.device function utilizes the NVIDIA driver to speed up training. Inclu
 Since cuda runs well on binary exponents, 32 samples per weight update optimizes the GPU without too much memory consumption.
 
 The pytorch import handles memory allocation and parallel processing via thread blocks on NVIDIA's CUDA architecture. A 32 block size can also be known as a wrap, and behaves well with the gpu's available cores without causing problems for the code being run on devices that cannot use the gpu. 
+
+```
+import torch
+
+# ~~ Training Setup ~~
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+BATCH_SIZE = 32     # increment of 16 for better convergence (in respect to GPU memory)
+```
