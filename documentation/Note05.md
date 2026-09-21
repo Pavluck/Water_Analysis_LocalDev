@@ -44,3 +44,11 @@ The backbone is less sensitive to learning rate changes than the head, so we app
 ```
 BACKBONE_LR = 0.1
 ```
+
+# Optimization
+
+The torch.device function utilizes the NVIDIA driver to speed up training. Includes an if statement for those who desire to run the code with machines that do not have the NVIDIA GPU.
+
+Since cuda runs well on binary exponents, 32 samples per weight update optimizes the GPU without too much memory consumption.
+
+The pytorch import handles memory allocation and parallel processing via thread blocks on NVIDIA's CUDA architecture. A 32 block size can also be known as a wrap, and behaves well with the gpu's available cores without causing problems for the code being run on devices that cannot use the gpu. 
