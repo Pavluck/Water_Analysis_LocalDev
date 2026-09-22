@@ -116,19 +116,13 @@ class DataPrep(Dataset):
     def get_filename(self, idx):
         return str(self.annotations.iloc[idx].iloc[0]).strip()
 ```
+We can improve this by creating a safeguard when image loading fails. If there exists an image that crashes, doesn't load, or is corrupted as more data is hand picked or if there was a download error. 
+Skipping images can lead to an imbalance in the dataset and may affect the training process. A placeholder can be used; a neutral gray image of the same size (224x224 pixels) to maintain consistency in input dimensions. The placeholder image needs to be neutral, so it will be (224, 224), (128, 128, 128), a grey image marked as non-potable. This allows the training to continue while logging the error for later investigation. 
+By using a placeholder, the model still receives input of the expected size and format, which can help maintain stability during training. 
 
-We can improve this by creating a safeguard when image loading fails. If there exists an image that crashes, doesn't load, or is corrupted, it would interrupt the training process.
-
-Instead, we create a neutral gray image of the same size (for ours, it is 224x224 pixels) to maintain consistency in input dimensions.
-This allows the training to continue while logging the error for later investigation.
-Can't we just skip the image? Yes, but skipping images can lead to an imbalance in the dataset and may affect the training process.
-By using a placeholder, we ensure that the model still receives input of the expected size and format, which can help maintain stability during training.
-
-Alternatively, a break could be applied. Breaking the loop would stop the training process. By the placeholder, it will then log the error and continue training with the remaining images. This way, we can still utilize the majority of the dataset while being aware of any issues with specific images.
-
-The placeholder image needs to be neutral, so it will be (224, 224), (128, 128, 128), a grey image marked as non-potable.
-
+Alternatively, a break could be applied. Breaking the loop would stop the training process. By the placeholder, it will log the error and continue training with the remaining images. This way, we can still utilize the majority of the dataset while being aware of any issues with specific images.
 ```
+
 # ~~~~~ imports & dependencies ~~~~~~~
 from torch.utils.data import Dataset
 
@@ -183,8 +177,8 @@ class DataPrep(Dataset):
 ```
 
 Now that the data is ready, it can be augmented using torchvision's modules.
-This definition will compose a series of transformations to be applied to the training images.
-These transformations include resizing, random horizontal flipping, random rotation, color jittering, conversion to tensor, and normalization.
+Augmentation is a technique, sometimes a series of transformations to be applied to the training images.
+The transformations selected include resizing, random horizontal flipping, random rotation, color jittering, conversion to tensor, and normalization.
 The purpose of these transformations is to augment the training data and improve the model's generalization ability.
 
 The normalization range (line 10) was selected because it is the standard normalization range for pre-trained models in PyTorch, which are typically trained on the ImageNet dataset.
