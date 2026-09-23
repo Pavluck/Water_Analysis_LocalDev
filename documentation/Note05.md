@@ -64,3 +64,58 @@ BATCH_SIZE = 32     # increment of 16 for better convergence (in respect to GPU 
 ### Ready to train
 Now that the training parameters are set, we can begin training the model. Training is performed one epoch at a time. During each epoch, the model processes the training data in batches. After reaching the previously defined number of epochs, the tracking metrics are updated. The report of the network's performance is tracked so updates can be made during propagation.
 The training function takes in parameters: the model, data loader, loss function (criterion), optimizer, device, and optional gradient-clipping value. It trains the model for one epoch and returns the average loss and accuracy.
+
+```
+import torch
+
+def train_epoch(model, loader, criterion, optimizer, device, clip_norm=None):
+    """
+    Trains for one epoch.
+    """
+
+    # setup
+    model.train()
+
+    total_loss = 0.0
+    correct = 0
+    total = 0
+
+    # ~~~ training loop
+    for images, labels in loader:
+        images = images.to(device)
+        labels = labels.to(device)
+
+        # Cleanup gradients
+        optimizer.zero_grad()
+
+        # ~~~ Forward pass.
+        # CrossEntropyLoss [batch_size, num_classes]
+        outputs = model(images)
+
+        loss = criterion(outputs, labels)
+
+        # ~~~ Backward pass: calculate gradients.
+        loss.backward()
+
+        # Steady gradients- Safehandling from exploding
+        if clip_norm is not None and clip_norm > 0:
+            torch.nn.utils.clip_grad_norm_(
+                model.parameters(),
+                clip_norm
+            )
+
+        # ~~~ Weight Updates ~~~
+        optimizer.step()
+        total_loss += loss.item()
+        predicted = outputs.argmax(dim=1)
+        total += labels.size(0)
+
+        matches: torch.Tensor = torch.eq(predicted, labels)
+        correct += matches.sum().item()
+
+    # Calculate metrics after processing all batches.
+    average_loss = total_loss / len(loader)
+    accuracy = 100.0 * correct / total
+
+    return average_loss, accuracy
+```
