@@ -61,4 +61,6 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 32     # increment of 16 for better convergence (in respect to GPU memory)
 ```
 
+### Ready to train
 Now that the training parameters are set, we can begin training the model. Training is performed one epoch at a time. During each epoch, the model processes the training data in batches. After reaching the previously defined number of epochs, the tracking metrics are updated. The report of the network's performance is tracked so updates can be made during propagation.
+The training function takes in parameters: the model, data loader, loss function (criterion), optimizer, device, and optional gradient-clipping value. It trains the model for one epoch and returns the average loss and accuracy.
