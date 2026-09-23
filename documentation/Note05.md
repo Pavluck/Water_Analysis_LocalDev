@@ -45,7 +45,7 @@ The backbone is less sensitive to learning rate changes than the head, so we app
 BACKBONE_LR = 0.1
 ```
 
-# Optimization
+### Training Optimization
 
 The torch.device function utilizes the NVIDIA driver to speed up training. Includes an if statement for those who desire to run the code with machines that do not have the NVIDIA GPU.
 
@@ -60,3 +60,5 @@ import torch
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 32     # increment of 16 for better convergence (in respect to GPU memory)
 ```
+
+Now that the training parameters are set, we can begin training the model. Training is performed one epoch at a time. During each epoch, the model processes the training data in batches. After reaching the previously defined number of epochs, the tracking metrics are updated. The report of the network's performance is tracked so updates can be made during propagation.
