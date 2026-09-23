@@ -123,8 +123,8 @@ def train_epoch(model, loader, criterion, optimizer, device, clip_norm=None):
 optimizer.zero_grad() clears the gradients from the previous batch so they do not accumulate. After the model produces its predictions and the loss is calculated, loss.backward() computes the gradients of the loss with respect to the model's parameters. The optimizer then uses these gradients to update the model's parameters.  
 
 This has the flow:  
-load batch (aka split data)   
-    ~> training loop:   
-        ~> cleanup and setup (zero gradients, etc) ~> forward pass ~> calculate loss ~> backward pass ~> clip gradients   
-     ~> end of loop: update weights    
- ~> return     
+load batch (aka split data)  
+└──    ~> training loop:  
+│ ├──       ~> cleanup and setup (zero gradients, etc) ~> forward pass ~> calculate loss ~> backward pass ~> clip gradients  
+│ ├──     ~> end of loop: update weights  
+└──  ~> return  
