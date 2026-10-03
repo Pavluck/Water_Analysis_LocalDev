@@ -122,9 +122,12 @@ def train_epoch(model, loader, criterion, optimizer, device, clip_norm=None):
 
 optimizer.zero_grad() clears the gradients from the previous batch so they do not accumulate. After the model produces its predictions and the loss is calculated, loss.backward() computes the gradients of the loss with respect to the model's parameters. The optimizer then uses these gradients to update the model's parameters.  
 
-This has the flow:  
+#### Training Flowchart (placeholder: update with Figma)
 load batch (aka split data)  
 └──    ~> training loop:  
 │ ├──       ~> cleanup and setup (zero gradients, etc) ~> forward pass ~> calculate loss ~> backward pass ~> clip gradients  
 │ ├──     ~> end of loop: update weights  
 └──  ~> return  
+
+### Validating the Model
+Another step to the Training process is to determine how accurate the model is using images that the model has yet to see. The Test Dataset is separate for the training images, but similar in context, which is useful in determining if further feature engineering and retraining is needed. 
