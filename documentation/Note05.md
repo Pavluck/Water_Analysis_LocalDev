@@ -131,3 +131,23 @@ load batch (aka split data)
 
 ### Validating the Model
 Another step to the Training process is to determine how accurate the model is using images that the model has yet to see. The Test Dataset is separate for the training images, but similar in context, which is useful in determining if further feature engineering and retraining is needed. 
+
+```
+def validation(model, loader, criterion, device):
+    """Determines Accuracy using Test Data"""
+    model.eval()
+    total_loss = 0.0
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for images, labels in loader:
+            images = images.to(device)
+            labels = labels.to(device)
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+            total_loss += loss.item()
+            _, predicted = outputs.max(1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+    return total_loss / len(loader), 100.0 * correct / total
+```
