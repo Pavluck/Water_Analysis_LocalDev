@@ -151,3 +151,7 @@ def validation(model, loader, criterion, device):
             correct += (predicted == labels).sum().item()
     return total_loss / len(loader), 100.0 * correct / total
 ```
+
+### Call to Train
+The training functions are complete, thus, we can begin a pipeline to call the functions and classes.
+The first step would be to load our datasets using the Data Preparation Class.
