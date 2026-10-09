@@ -51,3 +51,40 @@ function WaterUpload() {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!selectedFile) {
+      setError("Choose an image or video before starting the analysis.");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+    setResult(null);
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL.replace(/\/$/, "")}/api/analyze-water`,
+        { method: "POST", body: formData }
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "The server could not analyze this file.");
+      }
+      if (typeof data.potable !== "boolean") {
+        throw new Error("The server returned an invalid analysis result.");
+      }
+      setResult(data);
+    } catch (requestError) {
+      setError(
+        requestError.message ||
+          "Could not connect to the Water AI server. Check that the backend is running."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
