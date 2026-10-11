@@ -8,11 +8,19 @@ from random import randint
 import json
 from flask import *
 from flask_cors import CORS
+from water_analysis import water_analysis
 # ~~~~~ Port ~~~~
 app = Flask(__name__,
             static_url_path = '',
             static_folder='static',)
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024*1024
+app.register_blueprint(water_analysis)
+# Error Handling 
+@app.errorhandler(413)
+def err_size(_error):
+            return jsonify({'error': 'please select a file 100 MB or less.'}), 413
 # ~~~~ CORS ~~~~
+CORS_ORIGINS = os.getenv('CORS_ORIGINS')
 CORS(app,
      origins=os.getenv('CORS_ORIGINS', 'http://localhost:3000').split(','),
      supports_credentials=True)
