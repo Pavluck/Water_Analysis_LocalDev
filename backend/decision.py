@@ -28,8 +28,10 @@ CORS(app,
 # ~~~~~~~ Functions & Formulas ~~~~~~~
 @app.route('/decision', methods=['POST'])
 def decision():
-            """Uses the data from the frontend and sends the decision whether the 
-            water is potable or not to the frontend"""
+    """
+    AI not needed for absolutes.
+    This uses data to decide if water is potable or not - sends decision to the frontend
+    """
             data = request.get_json()
             if not data:
                         return jsonify({'error': 'No input data provided'}), 400
@@ -65,4 +67,18 @@ def decision():
                                                 pass
                                     else:
                                                 decision = "This water's coloration is oddly vivid but may be potable"
-            # TODO: validate for other features
+            decision_json = {
+                    "decision": decision,
+                }
+
+            # return code 200 for the frontend if success    
+            return jsonify(decision_json), 200
+# ~~~~~~~~~~ Routes & Returns ~~~~~~~~~~
+@app.route('/')
+@app.route('/index.html')
+def index():
+    print("Index accessed")
+    return app.send_static_file('index.html')
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=os.getenv('PORT', 'SECRET')) # 1235
+# EOF
