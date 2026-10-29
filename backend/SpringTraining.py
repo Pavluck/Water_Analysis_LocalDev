@@ -29,7 +29,17 @@ Training_Labels = r"\ML_Water_LocalDev\Water-Images\train\_annotations.csv"
 Test_Images = r"\ML_Water_LocalDev\Water-Images\valid"
 Test_Labels = r"\ML_Water_LocalDev\Water-Images\valid\_annotations.csv"
 
-# ~~ Global Constants ~~
+# ~~ Training Setup ~~
+"""
+Global parameters for training and dataprep 
+weight decay, gradient clipping, etc
+"""
+Labels = {
+    "potable": 0,
+    "nonpotable": 1,
+    "clear": 0,
+    "murky": 1,
+}
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 32  # increment of 16 for GPU optimization
 EPOCHS = 20
@@ -45,10 +55,11 @@ Augment the data by resizing, flipping, rotation, jittering, and normalization
 """
 training = transforms.Compose([
   transforms.Resize((224, 224)),
-  transforms.RandomHoriontalFlip(0.5),
+  transforms.RandomHorizontalFlip(0.5),
   transforms.RandomRotation(10),
   transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
   transforms.ToTensor(),
+  transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]), 
   transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]) # chosen mean/std from Pytorch to support training convergence
 ])
 
@@ -58,33 +69,32 @@ targets = transforms.Compose([
 ]) 
 
 #~~~ Global Functions ~~~
-# Training
 def train_epoch(model, loader, criterion, optimizer, device, clip_norm=None):
   """
   Loads the dataset and trains for a single epoch using the WaterCNN & Dataprep class functions
   """
-    model.train()
-    total_loss = 0.0
-    correct = 0
-    total = 0
-    for images, labels in loader:
-        images = images.to(device)
-        labels = labels.to(device)
-        optimizer.zero_grad()
-        outputs = model(images)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        if clip_norm is not None and clip_norm > 0:
-            nn.utils.clip_grad_norm_(model.parameters(), clip_norm)
-        optimizer.step()
-        total_loss += loss.item()
-        _, predicted = outputs.max(1)
-        total += labels.size(0)
-        correct += (predicted == labels).sum().item()
-    return total_loss / len(loader), 100.0 * correct / total
+  model.train()
+  total_loss = 0.0
+  correct = 0
+  total = 0
+  for images, labels in loader:
+    images = images.to(device)
+    labels = labels.to(device)
+    optimizer.zero_grad()
+    outputs = model(images)
+    loss = criterion(outputs, labels)
+    loss.backward()
+    if clip_norm is not None and clip_norm > 0:
+      nn.utils.clip_grad_norm_(model.parameters(), clip_norm)
+    optimizer.step()
+    total_loss += loss.item()
+    _, predicted = outputs.max(1)
+    total += labels.size(0)
+    correct += (predicted == labels).sum().item()
+  return total_loss / len(loader), 100.0 * correct / total
 
-# Validation
-def test_epoch(model, loader, criterion, device):
+
+def validate(model, loader, criterion, device):
   """
   Takes in a model from WaterCNN along with the DataLoader to tailor a dataset.
   After testing, it checks the targets and returns the average loss and accuracy
@@ -105,6 +115,7 @@ def test_epoch(model, loader, criterion, device):
       total += targets.size(0)
       correct += (predicted == targets).sum().item()
   return total_loss / len(loader), 100.0*(correct/total)
+
 
 class DataPrep(Dataset):
   """
@@ -138,10 +149,11 @@ class DataPrep(Dataset):
     try:
       image = Image.open(path).convert('RGB')
     except Exception as e:
-      print(f"Error loading {path}: {e]")
+      print(f"Error loading {path}: {e}")
     if self.transform is not None:
       image = self.transform(image)
     return image, label
+
 
 class WaterCNN(nn.Module):
   """
@@ -161,6 +173,7 @@ class WaterCNN(nn.Module):
       nn.Dropout(0.5), nn.Linear(256, 2) # nnLinear called twice for forward and backward pass
     )  
 
+
   def propagation(self, tensor):
     """
     Given the input tensor, passes it through our ResNet backbone made with the
@@ -170,16 +183,17 @@ class WaterCNN(nn.Module):
     prediction = self.backbone(tensor)
     return prediction
 
+
 # ~~~ Main Function ~~~
 def main():
   """
   Train ResNet CNN version 2.5: Similar to 2.4, with weight decay & grad. clips
   """
   # Load & Prepare Data
-  training_data =   DataPrep(Training_Images, Training_Labels, transform=train_transforms)
-  test_data =       DataPrep(Test_Images, Test_Labels, transform=val_transforms)
+  training_data =   DataPrep(Training_Images, Training_Labels, transform=training)
+  test_data =       DataPrep(Test_Images, Test_Labels, transform=targets)
   training_loader = DataLoader(training_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
-  test_loader =     DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=False, num_workers=0)
+  test_loader =     DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=False, num_workers=0)  
   # Backbone freezing
   model = WaterCNN(num_classes=2).to(DEVICE)
   criterion = nn.CrossEntropyLoss()
@@ -198,20 +212,20 @@ def main():
         {'params': head_params, 'lr': LEARNING_RATE, 'weight_decay': WEIGHT_DECAY}
   ])
   # StepLR is a learning rate scheduler that reduces the learning rate by a factor of gamma every step_size epochs
-  scheduler = optim.lr_scheduler.StepLR(optimzer, step_size=10, gamma = 0.1)
+  scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma = 0.1)
   # https://docs.pytorch.org/docs/2.13/generated/torch.optim.lr_scheduler.StepLR.html
-  history = {'training_losses':[],'train_misses':[], 'training_accuracy':[], 'test_misses':[], 'test_accuracy':[]}
+  history = {'train_losses': [], 'train_accuracy': [], 'test_losses': [], 'test_accuracy': []}
   # training setup
   loss, accuracy = train_epoch(model, training_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
   test_loss, test_accuracy = validate(model, test_loader, criterion, DEVICE)
-  history['training_misses':[], 'training_hits':[], 'test_misses':[], 'test_hits':[]}
+  history = {'train_losses': [], 'train_accuracy': [], 'test_losses': [], 'test_accuracy': []}
   # train loop
   for epoch in range(EPOCHS):
     if epoch == BACKBONE_FREEZE:
       # Unfreeze when finetuning the Res Network
       for parameter in model.parameters():
         param.requires_grad = True
-      backbone_params = [value for name, value in model.named_parameters() if name.startswith('backbone' and not name.startswith('backbone.fc')]
+      backbone_params = [value for name, value in model.named_parameters() if name.startswith('backbone') and not name.startswith('backbone.fc')]
       # exclude the final layer (fc)
       head_params = backbone_params # copy and seperate the classification head
       optimizer = optim.Adam([
@@ -220,15 +234,14 @@ def main():
       ])
       scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
     # Benchmark performance 
-    training_miss, training_hit = train_epoch(model, train_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
+    training_miss, training_hit = train_epoch(model, training_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
     test_miss, test_hit = validate(model, test_loader, criterion, DEVICE)
-    history['training_losses'].append(loss)
-    history['training_accuracy'].append(accuracy)
-    history['training_misses'].append(100.0- accuracy)
-    history['test_misses'].append(test_miss)
-    history['test_hits'].append(test_hit)
+    history['train_losses'].append(training_miss)
+    history['train_accuracy'].append(training_hit)
+    history['test_losses'].append(test_miss)
+    history['test_accuracy'].append(test_hit)
     scheduler.step()
-    print(f"Epoch {epoch+1}/{EPOCHS}: training loss = {test_misses:.4f}, training accuracy ={training_accuracy:.2f}%, validation loss={test_misses:.4f}, validation accuracy = {test_hits:.2f}%")
+    print(f"Epoch {epoch+1}/{EPOCHS}: training loss = {test_miss:.4f}, training accuracy ={training_hit:.2f}%, validation loss={test_miss:.4f}, validation accuracy = {test_hit:.2f}%")
     # Save History & Model
     torch.save(model.state_dict(), NAME)
     with open(os.path.splitext(NAME)[0] + 'history.json', 'w') as f:
