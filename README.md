@@ -1,12 +1,13 @@
 # Water Analysis: Local Development
-This is different than the deployed version. To see my deployed Water Analysis, visit here: https://water-analysis.onrender.com/  
-Note: React takes a *very* long time to spin up on Render, taking about 8 minutes for both backend and frontend to be responsive.  
+This is different than the deployed version. The deployed version is undergoing revisions.  
 
-<img width="784" height="1134" alt="Screenshot 2026-01-04 195932" src="https://github.com/user-attachments/assets/8a758e42-6fa7-4132-a800-c87d9ad1b6b8" />
+<img width="634" height="586" alt="Screenshot 2026-11-04 093915" src="https://github.com/user-attachments/assets/9f1b8624-46d3-4183-ade7-4cdaf6cc8da8" />
 
 The Water Analysis software determines whether a body of water is potable for humans.
-Uses Chemical and/or Physical Features from the frontend (a website) to send the data to the backend.
-The backend analyzes the input, and returns a decision to the frontend for a user.
+It uses an input stream/image submitted from the frontend (a website) to send the data to the backend.
+Physical Features are given to a trained Residual Network where it classifies the potability of the water shown. 
+After the backend analyzes the input, it returns a decision to the frontend for a user to view. 
+There are also Feature Maps and Visuals for the user to understand the model's vision and focus with the stream shown. 
 
 # Project Setup and Run Instructions  
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)  
@@ -38,4 +39,5 @@ frontend/
 | └── components/ # React components / react-router-dom  
 | └── public # HTML
 backend/  
-└── Functions to train and feed user input to the AI (under development)  
+└── Functions to train and feed user input to the AI  
+| └── Residual CNN (AI/DL Model)
