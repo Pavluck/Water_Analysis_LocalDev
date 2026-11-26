@@ -130,9 +130,10 @@ class DataPrep(Dataset):
     self.annotations = pd.read_csv(labels)
     self.targets = {'potable':0, 'not_potable':1, 'clear':0, 'murky':1}
 
-  def __indexmap(self, index):
+  def __getitem__(self, index):
     """
     Obtains image with its cooresponding label
+    Need this to hook up with torch.utils.data's DataLoader
     """
     row = self.annotations.iloc[index]
     image = str(row.iloc[0]).strip()
@@ -154,6 +155,8 @@ class DataPrep(Dataset):
       image = self.transform(image)
     return image, label
 
+    def __len__(self): return len(self.annotations)     # for DataLoader 
+
 
 class WaterCNN(nn.Module):
   """
@@ -166,15 +169,15 @@ class WaterCNN(nn.Module):
     Initializes the backbone and number of features
     """
     super().__init__() # get Pytorch's constructor
-    self.backbone = models.resnet18(pretrain=True)
+    self.backbone = models.resnet18(pretrained=True)
     features = self.backbone.fc.in_features  # 2
     self.backbone.fc = nn.Sequential(
-      nn.Linear(features, 256), nn.ReLu(),
+      nn.Linear(features, 256), nn.ReLU(),
       nn.Dropout(0.5), nn.Linear(256, 2) # nnLinear called twice for forward and backward pass
     )  
 
 
-  def propagation(self, tensor):
+  def propogation(self, tensor):
     """
     Given the input tensor, passes it through our ResNet backbone made with the
     classification head from the init. 
@@ -215,12 +218,13 @@ def main():
   scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma = 0.1)
   # https://docs.pytorch.org/docs/2.13/generated/torch.optim.lr_scheduler.StepLR.html
   history = {'train_losses': [], 'train_accuracy': [], 'test_losses': [], 'test_accuracy': []}
-  # training setup
-  loss, accuracy = train_epoch(model, training_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
-  test_loss, test_accuracy = validate(model, test_loader, criterion, DEVICE)
-  history = {'train_losses': [], 'train_accuracy': [], 'test_losses': [], 'test_accuracy': []}
+
   # train loop
   for epoch in range(EPOCHS):
+    # training setup
+    loss, accuracy = train_epoch(model, training_loader, criterion, optimizer, DEVICE, clip_norm=NORMALIZATION)
+    test_loss, test_accuracy = validate(model, test_loader, criterion, DEVICE)
+    history = {'train_losses': [], 'train_accuracy': [], 'test_losses': [], 'test_accuracy': []}
     if epoch == BACKBONE_FREEZE:
       # Unfreeze when finetuning the Res Network
       for parameter in model.parameters():
